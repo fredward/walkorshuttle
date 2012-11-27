@@ -19,9 +19,25 @@ class Vehicle(models.Model):
   route = models.PositiveIntegerField()
   speed = models.FloatField()
   updated = models.DateTimeField()
+  def __unicode__(self):
+    return ('%s' % (self.vid))
 
 class Arrival_Estimate(models.Model):
   stop = models.PositiveIntegerField()
   route = models.PositiveIntegerField()
   vehicle = models.ForeignKey('Vehicle')
   time = models.DateTimeField()
+  def __unicode__(self):
+    return '%s %s %s' % (self.vehicle.vid, self.stop, self.time)
+
+class Stop(models.Model):
+  stop = models.PositiveIntegerField()
+  name = models.CharField(max_length = 75)
+  desc = models.CharField(max_length = 100)
+  code = models.CharField(max_length = 25)
+  location_lat = models.DecimalField(db_column = 'lat', max_digits = 18, decimal_places = 15)
+  location_lon = models.DecimalField(db_column = 'lon', max_digits = 18, decimal_places = 15)
+  location = dict()
+  location['lat'] = location_lat
+  location['lon'] = location_lon
+  #routes
