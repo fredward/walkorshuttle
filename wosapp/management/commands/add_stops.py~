@@ -11,7 +11,7 @@ class Command(BaseCommand):
         data = loads(args[0])
         #conveinence printer
         pp = pprint.PrettyPrinter(indent=4)
-        pp.pprint(data['data'])
+        pp.pprint(data['data']['52'])
         #['data'] is the data array in the json response
         for stop in data['data']:
             sdata = dict()

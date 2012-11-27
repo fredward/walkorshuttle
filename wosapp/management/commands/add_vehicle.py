@@ -1,3 +1,5 @@
+# adds vehicles to the Vehicle model that come in a pickled python dict from the unpacked from the transLoc API
+
 from django.core.management.base import BaseCommand, CommandError
 from wosapp.models import Vehicle, Arrival_Estimate
 from cPickle import loads
@@ -6,6 +8,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         Vehicle.objects.all().delete()
         data = loads(args[0])
+        #conveinence printer
         pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(data['data']['52'])
         for veh in data['data']['52']:

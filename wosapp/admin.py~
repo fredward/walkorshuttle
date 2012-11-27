@@ -1,4 +1,4 @@
-from wosapp.models import Vehicle, Arrival_Estimate, Stop
+from wosapp.models import Vehicle, Arrival_Estimate
 from django.contrib import admin
 
 admin.site.register(Vehicle)
