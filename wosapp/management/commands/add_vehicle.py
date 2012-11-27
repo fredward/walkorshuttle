@@ -1,9 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
-from wosapp.models import Vehicle
-from pickle import loads
+from wosapp.models import Vehicle, Arrival_Estimate
+from cPickle import loads
 import pprint
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        Vehicle.objects.all().delete()
         data = loads(args[0])
         pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(data['data']['52'])
@@ -19,3 +20,10 @@ class Command(BaseCommand):
             vdata['updated'] = veh['last_updated_on']
             v = Vehicle(**vdata)
             v.save()
+
+            #add the arrival estimates into the table
+            if(len(veh['arrival_estimates']) > 0):
+                Arrival_Estimate.objects.all().delete()
+            for ae in veh['arrival_estimates']:
+                newAE = Arrival_Estimate(stop = ae['stop_id'], route = ae['route_id'], time = ae['arrival_at'], vehicle = v)
+                newAE.save()

@@ -15,7 +15,13 @@ class Vehicle(models.Model):
   location_lon =  models.DecimalField(db_column = 'lon',max_digits = 18, decimal_places = 15)
   location['lat'] = location_lat
   location['lon'] = location_lon
-  #arrival estimates?
+  #arrival estimates are in new table linked in via a vehicle instance foreign key
   route = models.PositiveIntegerField()
   speed = models.FloatField()
   updated = models.DateTimeField()
+
+class Arrival_Estimate(models.Model):
+  stop = models.PositiveIntegerField()
+  route = models.PositiveIntegerField()
+  vehicle = models.ForeignKey('Vehicle')
+  time = models.DateTimeField()
