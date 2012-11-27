@@ -41,3 +41,16 @@ class Stop(models.Model):
   location['lat'] = location_lat
   location['lon'] = location_lon
   #routes
+
+class Route(models.Model):
+  rid = models.PositiveIntegerField()
+  longname = models.CharField(max_length = 100)
+  shortname = models.CharField(max_length = 50)
+  abbr = models.CharField(max_length = 25)
+  type = models.CharField(max_length = 15)
+  color = models.CharField(max_length = 6)
+  desc = models.CharField(max_length = 100)
+  # pickled array of segments
+  segments = models.CharField(max_length = 400)
+  # ManyToMany means that you can 'add' multiple stops into the stops field
+  stops = models.ManyToManyField(Stop)
