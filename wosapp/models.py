@@ -16,19 +16,19 @@ class Vehicle(models.Model):
   location['lat'] = location_lat
   location['lon'] = location_lon
   #arrival estimates are in new table linked in via a vehicle instance foreign key
-  route = models.PositiveIntegerField()
+  route = models.ForeignKey('Route')
   speed = models.FloatField()
   updated = models.DateTimeField()
   def __unicode__(self):
     return ('%s' % (self.vid))
 
 class Arrival_Estimate(models.Model):
-  stop = models.PositiveIntegerField()
-  route = models.PositiveIntegerField()
+  stop = models.ForeignKey('Stop')
+  route = models.ForeignKey('Route')
   vehicle = models.ForeignKey('Vehicle')
   time = models.DateTimeField()
   def __unicode__(self):
-    return '%s %s %s' % (self.vehicle.vid, self.stop, self.time)
+    return '%s, %s, %s, %s' % (self.vehicle.vid, self.route, self.stop, self.time)
 
 class Stop(models.Model):
   stop = models.PositiveIntegerField()
@@ -40,13 +40,15 @@ class Stop(models.Model):
   location = dict()
   location['lat'] = location_lat
   location['lon'] = location_lon
-  #routes
+  def __unicode__(self):
+    return self.name
+
 
 class Route(models.Model):
   rid = models.PositiveIntegerField()
   longname = models.CharField(max_length = 100)
   shortname = models.CharField(max_length = 50)
-  abbr = models.CharField(max_length = 25)
+  #abbr = models.CharField(max_length = 25)
   type = models.CharField(max_length = 15)
   color = models.CharField(max_length = 6)
   desc = models.CharField(max_length = 100)
@@ -54,3 +56,5 @@ class Route(models.Model):
   segments = models.CharField(max_length = 400)
   # ManyToMany means that you can 'add' multiple stops into the stops field
   stops = models.ManyToManyField(Stop)
+  def __unicode__(self):
+    return self.longname
