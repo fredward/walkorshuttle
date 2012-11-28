@@ -1,15 +1,37 @@
 <!DOCTYPE html>
 <html lang = "en">
 	<head>
+			<script src = "{{STATIC_URL}}js/jquery-1.8.3.min.js"></script>
 		    <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 			<script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
-			<script src = "{{STATIC_URL}}js/jquery-1.8.3.min.js"></script>
+			<script src = "{{STATIC_URL}}js/index.js"></script>
 	</head>
-	{% if vehicles_running %}
-		<ul>
-		{% for veh in vehicles_running %}
-			<li>{{veh.route}}</li>
-		{% endfor %}
-		</ul>
-	{% endif %}
+	<body>
+		<div id = "closeststop">
+		<table class = "table">
+			<tbody>
+			<tr>
+				<td>
+				The closest shuttle stop to you is: {{closest_stop}}<br/>
+				The next shuttles at that stop are:
+				<td>
+			</tr>
+				{% for r in routes_in_service %}
+						<tr class = "route-info">
+							<td>{{r}}<br/>
+								<div class = "extra-route-prompt" >
+									<small> Click for route info </small>
+								</div>
+								<div class = "extra-route-info" style = "display : none">
+									{% for s in r.stops.values%} {{s.name}}, {% endfor %}
+								</div>
+							</td>
+						</tr>
+				{% endfor %}
+				
+				
+			</tbody>
+		</table>
+		</div>
+	</body
 </html>
