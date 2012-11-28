@@ -47,7 +47,10 @@ class Command(BaseCommand):
             r.save()
             # go through each stop ID in the data and add the corresponding stop to the route stop field
             for stopid in route['stops']:
-                stop = Stop.objects.filter(stop__exact=stopid)[0]
-                r.stops.add(stop)
+                try:
+                    stop = Stop.objects.get(stop=stopid)
+                    r.stops.add(stop)
+                except django.core.exceptions.ObjectDoesNotExist:
+                    print("Exception")
                 print(str(stop.stop) + " on route " + r.longname)
             r.save()

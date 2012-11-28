@@ -18,7 +18,10 @@ class Command(BaseCommand):
             vdata['heading'] = veh['heading']
             vdata['location_lat'] = veh['location']['lat']
             vdata['location_lon'] = veh['location']['lng']
-            vdata['route'] = Route.objects.filter(rid=veh['route_id'])[0]
+            if(len(Route.objects.filter(rid=veh['route_id'])) > 0):
+                vdata['route'] = Route.objects.filter(rid=veh['route_id'])[0]
+            else:
+                vdata['route'] = 'No Route Data'
             vdata['speed'] = veh['speed']
             vdata['updated'] = veh['last_updated_on']
             v = Vehicle(**vdata)
@@ -29,8 +32,14 @@ class Command(BaseCommand):
                 Arrival_Estimate.objects.filter(vehicle=v).delete()
             for ae in veh['arrival_estimates']:
                 aeData = dict()
-                aeData['stop'] = Stop.objects.filter(stop=ae['stop_id'])[0]
-                aeData['route'] = Route.objects.filter(rid=ae['route_id'])[0]
+                if(len(Stop.objects.filter(stop=ae['stop_id'])) > 0):
+                    aeData['stop'] = Stop.objects.filter(stop=ae['stop_id'])[0]
+                else:
+                    aeData['stop'] = 'No Stop Data'
+                if(len(Route.objects.filter(rid=ae['route_id'])) > 0):
+                    aeData['route'] = Route.objects.filter(rid=ae['route_id'])[0]
+                else:
+                    aeData['route'] = 'No Route Data'
                 aeData['time'] = ae['arrival_at']
                 aeData['vehicle'] = v
                 newAE = Arrival_Estimate(**aeData)
