@@ -13,7 +13,7 @@
 					<tr>
 						<td>
 						The closest shuttle stop to you is: {{closest_stop}}<br/>
-						The next shuttles at that stop are:
+						The next shuttles at that stop are: {{next_shuttles|join:" | "}}
 						<td>
 					</tr>
 						{% for r in routes_in_service %}
