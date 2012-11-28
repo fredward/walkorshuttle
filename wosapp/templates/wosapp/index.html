@@ -23,7 +23,7 @@
 											<small> Click for route info </small>
 										</div>
 										<div class = "extra-route-info" style = "display : none">
-											{% for s in r.stops.values%} {{s.name}}, {% endfor %}
+											{{ r.stops.all|join:", " }}
 										</div>
 									</td>
 								</tr>
