@@ -2,8 +2,9 @@
 
 from django.core.management.base import BaseCommand, CommandError
 from wosapp.models import Stop, Route
-from cPickle import loads, dumps
+import json
 import pprint
+from cPickle import loads
 class Command(BaseCommand):
     def handle(self, *args, **options):
         #clear the old stops out
@@ -42,15 +43,19 @@ class Command(BaseCommand):
             rdata['type'] = route['type']
             rdata['color'] = route['color']
             rdata['desc'] = route['description']
-            rdata['segments'] = dumps(route['segments'])
+            rdata['segments'] = json.dumps(route['segments'])
             r = Route(**rdata)
             r.save()
+            order = []
             # go through each stop ID in the data and add the corresponding stop to the route stop field
             for stopid in route['stops']:
                 try:
                     stop = Stop.objects.get(stop=stopid)
+                    order.append(stopid)
                     r.stops.add(stop)
                 except django.core.exceptions.ObjectDoesNotExist:
                     print("Exception")
                 print(str(stop.stop) + " on route " + r.longname)
+            
+            r.order = json.dumps(order)
             r.save()

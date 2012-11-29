@@ -56,5 +56,6 @@ class Route(models.Model):
   segments = models.CharField(max_length = 400)
   # ManyToMany means that you can 'add' multiple stops into the stops field
   stops = models.ManyToManyField(Stop)
+  order = models.CharField(max_length = 500)
   def __unicode__(self):
     return self.longname
