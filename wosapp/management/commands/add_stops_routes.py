@@ -39,7 +39,6 @@ class Command(BaseCommand):
             rdata['rid'] = route['route_id']
             rdata['longname'] = route['long_name']
             rdata['shortname'] = route['short_name']
-            #rdata['abbr'] = ''route['abbreviaton']
             rdata['type'] = route['type']
             rdata['color'] = route['color']
             rdata['desc'] = route['description']
@@ -51,11 +50,12 @@ class Command(BaseCommand):
             for stopid in route['stops']:
                 try:
                     stop = Stop.objects.get(stop=stopid)
+                    print(r.longname + " " + stop.name)
                     order.append(stopid)
                     r.stops.add(stop)
                 except django.core.exceptions.ObjectDoesNotExist:
                     print("Exception")
-                print(str(stop.stop) + " on route " + r.longname)
+               # print(str(stop.stop) + " on route " + r.longname)
             
             r.order = json.dumps(order)
             r.save()
