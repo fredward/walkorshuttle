@@ -5,6 +5,7 @@
 		    <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 			<script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
 			<script src = "{{STATIC_URL}}js/index.js"></script>
+			<script src = "{{STATIC_URL}}js/get_location.js"></script>
 	</head>
 	<body>
 		<div id = "closeststop">
@@ -12,8 +13,8 @@
 				<tbody>
 					<tr>
 						<td>
-						The closest shuttle stop to you is: {{closest_stop}}<br/>
-						The next shuttles at that stop are: {{next_shuttles|join:" | "}}
+						The closest shuttle stop to you is: <span id="closest"></span><br/>
+						The next shuttles at that stop are: <span id="next_shuttles"</span>
 						<td>
 					</tr>
 						{% for r in routes_in_service %}
