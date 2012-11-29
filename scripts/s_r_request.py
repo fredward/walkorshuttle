@@ -1,5 +1,8 @@
 from subprocess import call
 import urllib, json, cPickle
+import os
+dir = os.path.dirname(__file__)
+manager_path = os.path.join(dir, '../manage.py')
 
 dataDict = dict()
 params = urllib.urlencode({"agencies" : 52})
@@ -11,4 +14,4 @@ dataDict['stops'] = json.load(f)
 f = urllib.urlopen("http://api.transloc.com/1.1/routes.json?%s" % params)
 
 dataDict['routes'] = json.load(f)
-call(['python','/Users/carlcward/Documents/cs50/walkorshuttle/manage.py','add_stops_routes',cPickle.dumps(dataDict)])
+call(['python',manager_path,'add_stops_routes',cPickle.dumps(dataDict)])
