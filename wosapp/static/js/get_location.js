@@ -56,9 +56,17 @@ if(navigator.geolocation) {
 							    $('#closest').text(data['closest']);
 							    $.each(data['next_shuttles'], function(){
 							    	$('#next_shuttles').append($("<div/>", { text: (this[0] + ", " + this[1]), class : 'shuttle-info'}));
+							    	next_stops = data['next_shuttles_route'][this[2]];
+							    	console.log(next_stops)
+							    	if(next_stops !== undefined) {
+							    	$.each(next_stops, function() {
+							    		
+							    		$('#next_shuttles').append($("<div/>", { text: ("Next: "+this[0] + ", " + this[1]+"," +this[2]), class : 'shuttle-info'}));
+							    	
+							    	});}
 							    });
 							    $('.shuttle-info').click( function() {
-							    	//show some more data about the shuttle that they click on
+							    	
 							    });
 							    //$('#next_shuttles').html(shuttle_string);
 							}, 'json'
