@@ -52,9 +52,15 @@ if(navigator.geolocation) {
 						 console.log(position);
 						 $.post("geolocate/",position,
 							function(data) {
-								console.log(data['closest'])
+								//console.log(data['closest'])
 							    $('#closest').text(data['closest']);
-							    $('#next_shuttles').text(data['next_shuttles']);
+							    $.each(data['next_shuttles'], function(){
+							    	$('#next_shuttles').append($("<div/>", { text: (this[0] + ", " + this[1]), class : 'shuttle-info'}));
+							    });
+							    $('.shuttle-info').click( function() {
+							    	//show some more data about the shuttle that they click on
+							    });
+							    //$('#next_shuttles').html(shuttle_string);
 							}, 'json'
 							);
 					     },

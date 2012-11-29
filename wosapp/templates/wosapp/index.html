@@ -10,21 +10,24 @@
 	<body>
 		<div id = "closeststop">
 			<table class = "table">
+				<thead>
+					<tr><td>Running Shuttles</td></tr>
+				</thead>
 				<tbody>
 					<tr>
 						<td>
-						The closest shuttle stop to you is: <span id="closest"></span><br/>
-						The next shuttles at that stop are: <span id="next_shuttles"</span>
-						<td>
+						The closest shuttle stop to you is: <span id="closest"></span>
+						<div>The next shuttles at that stop are: <span id="next_shuttles"</span></div>
+						</td>
 					</tr>
-						{% for r in routes_in_service %}
+						{% for r, sl in ordered_stops.items %}
 								<tr class = "route-info">
 									<td>{{r}}
 										<div class = "extra-route-prompt" >
 											<small> Click for route info </small>
 										</div>
 										<div class = "extra-route-info" style = "display : none">
-											{{ r.stops.all|join:", " }}
+											{{ sl|join:", "}}
 										</div>
 									</td>
 								</tr>
