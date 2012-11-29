@@ -9,13 +9,8 @@ import datetime
 
 def index(request):
 
-#	possible_routes = Route.objects.filter(stops__name__contains=closest_stop.name) 
-#	print possible_routes.values('id')
-#	vehicles_running_to_stop = Vehicle.objects.filter(route__in=possible_routes)
-	#routes_in_service =  Route.objects.filter(id__in=vehicles_running_to_stop.values['route'])
-	# get the next shuttles at the closest stop, ordered by time
-#	arrival_estimates_at_stop = []
-#	context = {'routes_in_service' : possible_routes, 'vehicles_running_to_stop' : vehicles_running_to_stop, 'closest_stop' : closest_stop, 'next_shuttles' : arrival_estimates_at_stop}
+
+#	some code to display the running routes and the stops in current order, this needs to be displayed in a better fashion
 	ordered_stops = dict()
 	for r in Route.objects.all():
 		ordered_stops[r.longname] = list()
@@ -30,7 +25,7 @@ def process_location(request):
 		lat = request.POST.get('coords[latitude]')
 		lon = request.POST.get('coords[longitude]')
 
-       	# get the closest shuttle stop
+    # get the closest shuttle stop
 	stops  = Stop.objects.all()
 	min_dist = 0.0
 	print( str(lat) + ',' + str(lon))
@@ -44,12 +39,14 @@ def process_location(request):
 				min_stop = stop
 	
 	closest_stop =  min_stop
-
+	
+	#get data from db about closest stop
 	possible_routes = Route.objects.filter(stops__name__contains=closest_stop.name) 
 	vehicles_running_to_stop = Vehicle.objects.filter(route__in=possible_routes)
 	arrival_estimates_at_stop = Arrival_Estimate.objects.filter(stop=min_stop).order_by('time')
 	
-	#get the next X shuttles in the ae for the vehicle 
+	#get the next X shuttles in the arrival estimates for each vehicles
+	#these will be displayed with each shuttle that is arriving at the users closest stop
 	next_shuttles_per_route = {}
 	# for each arrival estimate
 	for close_ae in arrival_estimates_at_stop:
@@ -75,6 +72,7 @@ def process_location(request):
 	print(next_shuttles_per_route)
 	return HttpResponse(json.dumps({'closest' : closest_stop.name, "next_shuttles" : next_shuttles, 'next_shuttles_route' : next_shuttles_per_route}))
 
+# calculates time difference between the current time and the supplied one to the nearest 1/10th of a min
 def calculate_min_until(atime):
 	atime = atime.replace(tzinfo=None)
 	timedifference = atime - datetime.datetime.utcnow()

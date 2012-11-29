@@ -1,4 +1,5 @@
 // using jQuery
+// Django provided code for managing sessions and cookies
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {
@@ -45,23 +46,29 @@ $.ajaxSetup({
 	    }
 	}
     });
+//end of Django provided code for managing sessions and cookies 
 
+//we asynchronously update data on the user's closest stop as the geolocation data comes in
+//this lets other parts of the page load even if the geolocation data isn't fast
 if(navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
 					     function( position ) {
 						 console.log(position);
+						 //post to python script and use response to update displayed shuttle data
 						 $.post("geolocate/",position,
 							function(data) {
 								//console.log(data['closest'])
 							    $('#closest').text(data['closest']);
 							    $.each(data['next_shuttles'], function(){
+							    	//display the next shuttles to the users closest stop
+							    	//under each stop show the next few stops for each shuttle after the users closest stop
 							    	$('#next_shuttles').append($("<div/>", { text: (this[0] + ", " + this[1]), class : 'shuttle-info'}));
 							    	next_stops = data['next_shuttles_route'][this[2]];
 							    	console.log(next_stops)
 							    	if(next_stops !== undefined) {
 							    	$.each(next_stops, function() {
 							    		
-							    		$('#next_shuttles').append($("<div/>", { text: ("Next: "+this[0] + ", " + this[1]+"," +this[2]), class : 'shuttle-info'}));
+							    		$('#next_shuttles').append($("<div/>", { text: ("Next: "+this[0] + ", " + this[1]+", " +this[2]), class : 'shuttle-info'}));
 							    	
 							    	});}
 							    });
