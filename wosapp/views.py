@@ -62,7 +62,6 @@ def process_location(request):
 			# if we are 'past' our stop and the vehicles match and the count is under 3
 			if(mark == True and count < 3 and ae.vehicle.vid == close_ae.vehicle.vid): # a sort of "flag" for the iteration, I hope its the least computationally expensive
 				next_shuttles_per_route.setdefault(close_ae.id, []).append([ae.route.longname, ae.stop.name, calculate_min_until(ae.time)])
-				print(ae.route.longname + ", " + ae.stop.name + "," + str(ae.vehicle.vid)+","+ str(close_ae.id))
 				count+=1
 			if(ae == close_ae):
 				mark = True
@@ -71,8 +70,7 @@ def process_location(request):
 	next_shuttles = list()
 	for ae in arrival_estimates_at_stop:
 		next_shuttles.append([ae.route.longname, calculate_min_until(ae.time), ae.id])
-       	#context = {'routes_in_service' : possible_routes, 'vehicles_running_to_stop' : vehicles_running_to_stop, 'closest_stop' : closest_stop, 'next_shuttles' : arrival_estimates_at_stop}
-	print(next_shuttles_per_route)
+       	
 	return HttpResponse(json.dumps({'closest' : closest_stop.name, "next_shuttles" : next_shuttles, 'next_shuttles_route' : next_shuttles_per_route}))
 
 def calculate_min_until(atime):
