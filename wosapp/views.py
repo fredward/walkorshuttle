@@ -50,18 +50,11 @@ def process_location(request):
 	next_shuttles_per_route = {}
 	# for each arrival estimate
 	for close_ae in arrival_estimates_at_stop:
-		#get the arrival estimates for that route
-		arrival_est_route = Arrival_Estimate.objects.filter(route=close_ae.route).order_by('time')
-		mark = False
-		count = 0
-		#for each of these estimates
-		for ae in arrival_est_route:
-			# if we are 'past' our stop and the vehicles match and the count is under 3
-			if(mark == True and count < 3 and ae.vehicle.vid == close_ae.vehicle.vid): # a sort of "flag" for the iteration, I hope its the least computationally expensive
-				next_shuttles_per_route.setdefault(close_ae.id, []).append([ae.route.longname, ae.stop.name, calculate_min_until(ae.time)])
-				count+=1
-			if(ae == close_ae):
-				mark = True
+		#get the next 3 arrival estimates for the given ae
+		ae_set = close_ae.arrivals_after(3)
+		for ae in ae_set:
+			next_shuttles_per_route.setdefault(close_ae.id, []).append([ae.route.longname, ae.stop.name, calculate_min_until(ae.time)])
+
 			
 				
 	next_shuttles = list()

@@ -22,6 +22,8 @@ class Vehicle(models.Model):
   def __unicode__(self):
     return ('%s' % (self.vid))
 
+  		
+
 class Arrival_Estimate(models.Model):
   stop = models.ForeignKey('Stop')
   route = models.ForeignKey('Route')
@@ -29,6 +31,19 @@ class Arrival_Estimate(models.Model):
   time = models.DateTimeField()
   def __unicode__(self):
     return '%s, %s, %s, %s' % (self.vehicle.vid, self.route, self.stop, self.time)
+  #all the arrivals after the given one (for the vehicle)
+  def arrivals_after(self,num):
+		vehicle_ae = Arrival_Estimate.objects.filter(vehicle=self.vehicle)
+		mark = False
+		ae_set = []
+		count = 0
+		for ae in vehicle_ae:
+			if(mark == True and count < num):
+				ae_set.append(ae)
+				count += 1
+			if(ae == self):
+				mark = True
+		return ae_set
 
 class Stop(models.Model):
   stop = models.PositiveIntegerField()

@@ -5,6 +5,7 @@ from wosapp.models import Stop, Route
 import json
 import pprint
 from cPickle import loads
+
 class Command(BaseCommand):
     def handle(self, *args, **options):
         #clear the old stops out
@@ -14,7 +15,6 @@ class Command(BaseCommand):
         data = raw_data['stops']
         #conveinence printer
         #pp = pprint.PrettyPrinter(indent=4)
-        #pp.pprint(data['data'])
         #['data'] is the data array in the json response
         for stop in data['data']:
             sdata = dict()
@@ -50,12 +50,11 @@ class Command(BaseCommand):
             for stopid in route['stops']:
                 try:
                     stop = Stop.objects.get(stop=stopid)
-                    print(r.longname + " " + stop.name)
+                    #print(r.longname + " " + stop.name)
                     order.append(stopid)
                     r.stops.add(stop)
                 except django.core.exceptions.ObjectDoesNotExist:
                     print("Exception")
-               # print(str(stop.stop) + " on route " + r.longname)
-            
+           
             r.order = json.dumps(order)
             r.save()
