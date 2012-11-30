@@ -1,7 +1,7 @@
 # Create your views here.
 from django.http import HttpResponse
 from django.shortcuts import render
-from wosapp.packages.distance import haversine
+from wosapp.packages.distance_time import haversine, calculate_min_until
 from wosapp.models import Vehicle, Route, Stop, Arrival_Estimate
 from django.core import serializers
 import json
@@ -63,9 +63,10 @@ def process_location(request):
        	
 	return HttpResponse(json.dumps({'closest' : closest_stop.name, "next_shuttles" : next_shuttles, 'next_shuttles_route' : next_shuttles_per_route}))
 
-# calculates time difference between the current time and the supplied one to the nearest 1/10th of a min
-def calculate_min_until(atime):
-	atime = atime.replace(tzinfo=None)
-	timedifference = atime - datetime.datetime.utcnow()
-	return round(timedifference.total_seconds()/60 , 1)
+
+# the method that takes a location for start and destination and gives you the fastest route
+def calculate_route(request):
+	data = request.POST
+
+
 	
