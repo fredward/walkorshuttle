@@ -60,20 +60,28 @@ if(navigator.geolocation) {
 								//console.log(data['closest'])
 							    $('#closest').text(data['closest']);
 							    $.each(data['next_shuttles'], function(){
-							    	//display the next shuttles to the users closest stop
-							    	//under each stop show the next few stops for each shuttle after the users closest stop
-							    	$('#next_shuttles').append($("<div/>", { text: (this[0] + ", " + this[1]), class : 'shuttle-info'}));
+							    	//display the next shuttles arriving at the user's closest stop -- the data on the vehicles is from the httpresponse
+							    	var next_shuttle_stops_div = $("<div/>", { html: ('<i class="icon-chevron-right"> </i>' + this[0] + ", " + this[1]), class : 'shuttle-info'});
+							    	$('#next_shuttles').append(next_shuttle_stops_div);
 							    	next_stops = data['next_shuttles_route'][this[2]];
 							    	console.log(next_stops)
 							    	if(next_stops !== undefined) {
-							    	$.each(next_stops, function() {
-							    		
-							    		$('#next_shuttles').append($("<div/>", { text: ("Next: "+this[0] + ", " + this[1]+", " +this[2]), class : 'shuttle-info'}));
-							    	
-							    	});}
+										$.each(next_stops, function() {
+											//add info about the next stops that each displayed vehicle will take -- but its hidden for now
+											next_shuttle_stops_div.append($("<div/>", { text: ("Next: "+this[0] + ", " + this[1]+", " +this[2]), style: "display: none; padding-left: 15px"}));
+										});
+									}
 							    });
+							    //when users click on a vehicle listing, hide and show data on the next stops the vehicle will take
 							    $('.shuttle-info').click( function() {
-							    	
+							    	if($(this).find('i').attr('class') == "icon-chevron-right"){
+										$(this).find('i').attr('class', 'icon-chevron-down');
+										$(this).children('div').slideDown();
+									}
+									else{
+										$(this).find('i').attr('class', 'icon-chevron-right');
+										$(this).children('div').slideUp();
+									}
 							    });
 							    //$('#next_shuttles').html(shuttle_string);
 							}, 'json'
@@ -83,11 +91,11 @@ if(navigator.geolocation) {
 						 //Do something on error
 					     },
 					     {
-						 timeout: (2 * 1000),
-						 maximumAge: (1000 * 60 * 15),
-						 enableHighAccuracy: true,
+							 timeout: (2 * 1000),
+							 maximumAge: (1000 * 60 * 15),
+							 enableHighAccuracy: true,
 					     }
-					     );
+						);
 }
 						     
 					    
