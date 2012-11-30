@@ -66,6 +66,7 @@ if(navigator.geolocation) {
 							    	next_stops = data['next_shuttles_route'][this[2]];
 							    	console.log(next_stops)
 							    	if(next_stops !== undefined) {
+							    	
 							    	$.each(next_stops, function() {
 							    		
 							    		$('#next_shuttles').append($("<div/>", { text: ("Next: "+this[0] + ", " + this[1]+", " +this[2]), class : 'shuttle-info'}));

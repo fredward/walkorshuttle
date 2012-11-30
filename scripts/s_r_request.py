@@ -10,8 +10,8 @@ f = urllib.urlopen("http://api.transloc.com/1.1/stops.json?%s" % params)
 #print json.load(f)['data']#[params['agencies']]
 
 dataDict['stops'] = json.load(f)
-pp = pprint.PrettyPrinter(indent=4)
-pp.pprint(dataDict)
+#pp = pprint.PrettyPrinter(indent=4)
+#pp.pprint(dataDict)
 
 f = urllib.urlopen("http://api.transloc.com/1.1/routes.json?%s" % params)
 
