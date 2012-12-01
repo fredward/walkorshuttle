@@ -63,8 +63,7 @@ def process_location(request):
 		next_shuttles.append([ae.route.longname, calculate_min_until(ae.time), ae.id])
        	
 	return HttpResponse(json.dumps({'closest' : closest_stop.name, "next_shuttles" : next_shuttles, 'next_shuttles_route' : next_shuttles_per_route}))
-<<<<<<< HEAD
-	
+
 #return possible destinations to show on the main page
 def get_destinations(request):
 	destinations = list()
@@ -75,12 +74,6 @@ def get_destinations(request):
 		destinations.append(dest)
 	return HttpResponse(json.dumps(destinations))
 		
-# calculates time difference between the current time and the supplied one to the nearest 1/10th of a min
-def calculate_min_until(atime):
-	atime = atime.replace(tzinfo=None)
-	timedifference = atime - datetime.datetime.utcnow()
-	return round(timedifference.total_seconds()/60 , 1)
-=======
 
 
 # the method that takes a location for start and destination and gives you the fastest route
@@ -97,9 +90,3 @@ def calculate_min_until(atime):
 #		route_data = json.load(data_return)
 #		travel_duration = route_data['resourceSets']['resources']['travelDuration']
 #		stop_walking_times[stop] = travel_duration
-		
-		
-
-
->>>>>>> 67a13430a86e2cbce46032ed6bf7203998c107a9
-	
