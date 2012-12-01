@@ -1,11 +1,12 @@
 # Create your views here.
+# Bing Maps Key: Am8_5ptSSXJmpyJ1b6hf_U5Uvc7rqMOsY2vkRuDdne5TG-R2VA3hCoNb7gI4RWU5
 from django.http import HttpResponse
 from django.shortcuts import render
-from wosapp.packages.distance import haversine
+from wosapp.packages.distance_time import haversine, calculate_min_until
 from wosapp.models import Vehicle, Route, Stop, Arrival_Estimate
 from django.core import serializers
+from urllib import urlopen, urlencode
 import json
-import datetime
 
 def index(request):
 
@@ -62,6 +63,7 @@ def process_location(request):
 		next_shuttles.append([ae.route.longname, calculate_min_until(ae.time), ae.id])
        	
 	return HttpResponse(json.dumps({'closest' : closest_stop.name, "next_shuttles" : next_shuttles, 'next_shuttles_route' : next_shuttles_per_route}))
+<<<<<<< HEAD
 	
 #return possible destinations to show on the main page
 def get_destinations(request):
@@ -78,4 +80,26 @@ def calculate_min_until(atime):
 	atime = atime.replace(tzinfo=None)
 	timedifference = atime - datetime.datetime.utcnow()
 	return round(timedifference.total_seconds()/60 , 1)
+=======
+
+
+# the method that takes a location for start and destination and gives you the fastest route
+#def calculate_route(request):
+#	data = request.POST
+#	current_location = #
+#	destination_stop = #get data from post
+#	#http://dev.virtualearth.net/REST/v1/Walking?
+#	#get walking distances to all stops
+#	stop_walking_times = dict()
+#	for stop in Stop.objects.all():
+#		params = urlencode({'wp.0': str(current_location['lat']) + str(current_location['lon']), 'wp.1': str(stop.location_lat) + "," + str(stop.location_lon), 'key' : 'Am8_5ptSSXJmpyJ1b6hf_U5Uvc7rqMOsY2vkRuDdne5TG-R2VA3hCoNb7gI4RWU5') 
+#		data_return = urlopen("http://dev.virtualearth.net/REST/v1/Walking?%s" % params)
+#		route_data = json.load(data_return)
+#		travel_duration = route_data['resourceSets']['resources']['travelDuration']
+#		stop_walking_times[stop] = travel_duration
+		
+		
+
+
+>>>>>>> 67a13430a86e2cbce46032ed6bf7203998c107a9
 	

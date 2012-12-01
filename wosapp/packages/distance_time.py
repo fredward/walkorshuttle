@@ -1,5 +1,5 @@
 from math import radians, cos, sin, asin, sqrt
-
+import datetime
 def haversine(lat1, lon1, lat2, lon2):
     """
     Calculate the great circle distance between two points 
@@ -16,7 +16,10 @@ def haversine(lat1, lon1, lat2, lon2):
     mile = 3,959 * c
     return mile 
 
-#def euclidian(lon1, lat1, lon2, lat2):
-#    dist = sqrt( (lon1-lon2)*(lon1-lon2) + (lat1-lat2)*(lat1-lat2) )
+# calculates time difference between the current time and the supplied one to the nearest 1/10th of a min
+def calculate_min_until(atime):
+	atime = atime.replace(tzinfo=None)
+	timedifference = atime - datetime.datetime.utcnow()
+	return round(timedifference.total_seconds()/60 , 1)
     
     
