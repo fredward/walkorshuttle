@@ -6,34 +6,37 @@
 			<script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
 			<script src = "{{STATIC_URL}}js/index.js"></script>
 			<script src = "{{STATIC_URL}}js/get_location.js"></script>
+			<script src = "{{STATIC_URL}}js/destination_select.js"></script>
 	</head>
-	<body>
+	<body  style = "margin-left: 15px">
 		<div id = "closeststop">
-			<table class = "table">
-				<thead>
-					<tr><td>Running Shuttles</td></tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>
-						The closest shuttle stop to you is: <span id="closest"></span>
+			Running Shuttles
+				
+						<div>The closest shuttle stop to you is: <span id="closest"></span></div>
 						<div>The next shuttles at that stop are: <span id="next_shuttles"</span></div>
-						</td>
-					</tr>
-						{% for r, sl in ordered_stops.items %}
-								<tr class = "route-info">
-									<td>{{r}}
+						<!--{% for r, sl in ordered_stops.items %}
+								<div class = "route-info">
+									{{r}}
 										<div class = "extra-route-prompt" >
 											<small> Click for route info </small>
 										</div>
 										<div class = "extra-route-info" style = "display : none">
 											{{ sl|join:", "}}
 										</div>
-									</td>
-								</tr>
-						{% endfor %}
-					</tbody>
-			</table>
+									
+								</div>
+						{% endfor %}-->
 		</div>
+		<div style = "margin-top : 15px">
+			Select your destination
+		</div>
+		<div id = "destination-select" >
+			<div class = "btn-group" id = "popular-destinations">	
+  			</div>
+  			<div>
+				<select>
+				</select>
+			</div>
+		</div> 
 	</body>
 </html>

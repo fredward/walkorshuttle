@@ -62,7 +62,17 @@ def process_location(request):
 		next_shuttles.append([ae.route.longname, calculate_min_until(ae.time), ae.id])
        	
 	return HttpResponse(json.dumps({'closest' : closest_stop.name, "next_shuttles" : next_shuttles, 'next_shuttles_route' : next_shuttles_per_route}))
-
+	
+#return possible destinations to show on the main page
+def get_destinations(request):
+	destinations = list()
+	for s in Stop.objects.all():
+		dest = dict()
+		dest['name'] = s.name
+		dest['id'] = s.stop
+		destinations.append(dest)
+	return HttpResponse(json.dumps(destinations))
+		
 # calculates time difference between the current time and the supplied one to the nearest 1/10th of a min
 def calculate_min_until(atime):
 	atime = atime.replace(tzinfo=None)
