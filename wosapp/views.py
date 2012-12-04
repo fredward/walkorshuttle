@@ -77,16 +77,21 @@ def get_destinations(request):
 
 
 # the method that takes a location for start and destination and gives you the fastest route
-#def calculate_route(request):
-#	data = request.POST
-#	current_location = #
-#	destination_stop = #get data from post
-#	#http://dev.virtualearth.net/REST/v1/Walking?
-#	#get walking distances to all stops
-#	stop_walking_times = dict()
-#	for stop in Stop.objects.all():
-#		params = urlencode({'wp.0': str(current_location['lat']) + str(current_location['lon']), 'wp.1': str(stop.location_lat) + "," + str(stop.location_lon), 'key' : 'Am8_5ptSSXJmpyJ1b6hf_U5Uvc7rqMOsY2vkRuDdne5TG-R2VA3hCoNb7gI4RWU5') 
-#		data_return = urlopen("http://dev.virtualearth.net/REST/v1/Walking?%s" % params)
-#		route_data = json.load(data_return)
-#		travel_duration = route_data['resourceSets']['resources']['travelDuration']
-#		stop_walking_times[stop] = travel_duration
+def calculate_route(request):
+	#data = request.POST
+	current_location = {'lat' : 42.368802, 'lon' : -71.11533}
+	destination_stop = Stop.objects.filter(name='Quad')
+	#http://dev.virtualearth.net/REST/v1/Routes/Walking?
+	#get walking distances to all stops
+	stop_walking_times = dict()
+	for stop in Stop.objects.all():
+		params = urlencode({'wp.0': str(current_location['lat']) + ','+ str(current_location['lon']), 'wp.1': str(stop.location_lat) + "," + str(stop.location_lon), 'key' : 'Am8_5ptSSXJmpyJ1b6hf_U5Uvc7rqMOsY2vkRuDdne5TG-R2VA3hCoNb7gI4RWU5'}) 
+		#print 'http://dev.virtualearth.net/REST/v1/Routes/Walking?' + params
+		data_return = urlopen("http://dev.virtualearth.net/REST/v1/Routes/Walking?%s" % params)
+		#print data_return.read()
+		route_data = json.load(data_return)
+		travel_duration = route_data['resourceSets'][0]['resources'][0]['travelDuration']
+		stop_walking_times[stop] = travel_duration
+	print stop_walking_times
+	return HttpResponse('OK!')
+		
