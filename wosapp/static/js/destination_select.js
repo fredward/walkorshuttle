@@ -21,11 +21,28 @@ $(document).ready(function() {
 		});
 		$('#popular-destinations > .btn').click(function(){
 					console.log($(this).attr('id'));
-					//make the correct post here
+					$.ajax({
+						url : "destinationselected/"
+						type : "POST",
+						dataType : "json",
+						data : {destination_id : $(this).attr('id')},
+					
+					}).done(function(data) {
+					
+					});
 				});
 		$('#destination-select').change(function(){
 					console.log($('#destination-select :selected').attr('id'));
 					//make the correct post here
+					$.ajax({
+						url : "destinationselected/"
+						type : "POST",
+						dataType : "json",
+						data : {destination_id : $('#destination-select :selected').attr('id')},
+					
+					}).done(function(data) {
+					
+					});
 			});
 	});
 });

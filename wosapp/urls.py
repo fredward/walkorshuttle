@@ -6,4 +6,5 @@ urlpatterns = patterns('',
 	 url(r'^$', views.index, name='index'),
 	 url(r'^destinations/$', views.get_destinations),
 	 url(r'^route', views.calculate_route)
+	 url(r'^destinationselected/$', views.destinationselected),
 )
