@@ -20,9 +20,8 @@ $(document).ready(function() {
 			
 		});
 		$('#popular-destinations > .btn').click(function(){
-					console.log($(this).attr('id'));
 					$.ajax({
-						url : "destinationselected/"
+						url : "destination_selected/",
 						type : "POST",
 						dataType : "json",
 						data : {destination_id : $(this).attr('id')},
@@ -32,10 +31,9 @@ $(document).ready(function() {
 					});
 				});
 		$('#destination-select').change(function(){
-					console.log($('#destination-select :selected').attr('id'));
 					//make the correct post here
 					$.ajax({
-						url : "destinationselected/"
+						url : "destination_selected/",
 						type : "POST",
 						dataType : "json",
 						data : {destination_id : $('#destination-select :selected').attr('id')},

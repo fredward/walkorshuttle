@@ -5,6 +5,6 @@ urlpatterns = patterns('',
    url(r'^geolocate/$', views.process_location),
 	 url(r'^$', views.index, name='index'),
 	 url(r'^destinations/$', views.get_destinations),
-	 url(r'^route', views.calculate_route)
-	 url(r'^destinationselected/$', views.destinationselected),
+	 url(r'^route/$', views.calculate_route),
+	 url(r'^destination_selected/$', views.destination_selected),
 )

@@ -73,6 +73,9 @@ def get_destinations(request):
 		dest['id'] = s.stop
 		destinations.append(dest)
 	return HttpResponse(json.dumps(destinations))
+	
+def destination_selected(request):
+	return
 		
 
 
