@@ -75,7 +75,7 @@ $(document).ready(function () {
                         $.each(next_stops, function () {
                             //add info about the next stops that each displayed vehicle will take -- but its hidden for now
                             next_shuttle_stops_div.append($("<div/>", {
-                                text: ("Next: " + this[0] + ", " + this[1] + ", " + this[2]),
+                                text: ("Next: " +this[1] + ", " + this[2]),
                                 style: "display: none; padding-left: 15px"
                             }));
                         });
