@@ -84,6 +84,8 @@ def destination_selected(request):
 	print "It will take " + str(request.session['walking_times'][request.POST['destination_id']]) + " sec to get to stop " + request.POST['destination_id']
 	just_walking_time = request.session['walking_times'][request.POST['destination_id']]
 	min_time = 10000
+	min_walk = 10000
+	min_ae = None
 	path = []
 	
 	# for every stop at harvard
@@ -105,23 +107,42 @@ def destination_selected(request):
 			
 			#get the next arrivals for that vehicle at your selected stop (see models.py)	
 			arrivals_after = ae.all_arrivals_after().filter(stop=selected_stop)
-		
+			
 			#for each of these arrivals
 			for arrival_ae in arrivals_after:
 				shuttle_time = calculate_time_between(arrival_ae.time, ae.time)
 				#total_transit_time = shuttle_time + timedelta(seconds=walk_time_to_stop)
 				
 				#get the total time from now to when shuttle arrives
-				total_time = calculate_time_between(arrival_ae.time, current_time)
+				total_time = round(calculate_time_between(arrival_ae.time, current_time).total_seconds())
 				#total_time = shuttle_time #+ timedelta(seconds=walk_time_to_stop)
 				print "Start: %s\tEnd: %s \tdiff: %s \twalk: %s\ttotal: %s" % (ae.time, arrival_ae.time, shuttle_time, walk_time_to_stop, total_time)
 				#if its a new minimum stop it it into a path list
-				if total_time.total_seconds() < min_time:
-					min_time = total_time.total_seconds()
+				if min_ae == None:
+					min_ae = arrival_ae
 					path = []
 					path.append(ae)
 					path.append(arrival_ae)
 					print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
+				elif arrival_ae.time < min_ae.time:
+					min_ae = arrival_ae
+					path = []
+					path.append(ae)
+					path.append(arrival_ae)
+					print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
+				elif arrival_ae == min_ae:
+					if walk_time_to_stop < min_walk:
+						min_walk = walk_time_to_stop
+						path = []
+						path.append(ae)
+						path.append(arrival_ae)
+						print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
+# 				if walk_time_to_stop < min_walk:
+# 					min_time = total_time.total_seconds()
+# 					path = []
+# 					path.append(ae)
+# 					path.append(arrival_ae)
+# 					print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
 	
 			
 			
