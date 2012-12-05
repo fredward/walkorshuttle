@@ -55,6 +55,9 @@ $(document).ready(function () {
 
         function (position) {
             console.log(position);
+            //post to server and get started on calculating walking distances
+            $.post("route/", position);
+            
             //post to python script and use response to update displayed shuttle data
             $.post("geolocate/", position,
 
