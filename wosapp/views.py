@@ -12,6 +12,7 @@ from pytz import UTC
 import json
 
 def index(request):
+	#csrf token
 	c = {}
 	c.update(csrf(request))
 #	some code to display the running routes and the stops in current order, this needs to be displayed in a better fashion
