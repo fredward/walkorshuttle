@@ -7,20 +7,22 @@ from wosapp.models import Vehicle, Route, Stop, Arrival_Estimate
 from django.core import serializers
 from urllib import urlopen, urlencode
 from datetime import datetime, timedelta
+from django.core.context_processors import csrf
 from pytz import UTC
 import json
 
 def index(request):
-
-
+	c = {}
+	c.update(csrf(request))
 #	some code to display the running routes and the stops in current order, this needs to be displayed in a better fashion
 	ordered_stops = dict()
 	for r in Route.objects.all():
 		ordered_stops[r.longname] = list()
 		for o in json.loads(r.order):
 			ordered_stops[r.longname].append(Stop.objects.get(stop=o).name)
-	print ordered_stops
-	return render(request, 'wosapp/index.html', {'ordered_stops': ordered_stops})
+	c.update({'ordered_stops': ordered_stops})
+	print c
+	return render(request, 'wosapp/index.html', c)
 
 def process_location(request):
 	# request comes in as a query dict where lat has the key 'coords[latitiude] and lon 'coords[longitude]'
