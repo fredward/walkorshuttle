@@ -21,5 +21,12 @@ def calculate_min_until(atime):
 	atime = atime.replace(tzinfo=None)
 	timedifference = atime - datetime.datetime.utcnow()
 	return round(timedifference.total_seconds()/60 , 1)
+	
+def calculate_time_between(time1, time2):
+	time1 = time1.replace(tzinfo=None)
+	time2 = time2.replace(tzinfo=None)
+	diff = time1-time2
+	return diff
+	
     
     
