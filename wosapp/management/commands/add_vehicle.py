@@ -3,14 +3,14 @@
 from django.core.management.base import BaseCommand, CommandError
 from wosapp.models import Vehicle, Arrival_Estimate, Route, Stop
 from cPickle import loads
-import pprint
+#import pprint
 class Command(BaseCommand):
     def handle(self, *args, **options):
         Vehicle.objects.all().delete()
         data = loads(args[0])
         #conveinence printer
-        pp = pprint.PrettyPrinter(indent=4)
-        pp.pprint(data['data']['52'])
+       # pp = pprint.PrettyPrinter(indent=4)
+       # pp.pprint(data['data']['52'])
         for veh in data['data']['52']:
             vdata = dict()
             vdata['vid'] = veh['vehicle_id']
@@ -21,7 +21,7 @@ class Command(BaseCommand):
             if(len(Route.objects.filter(rid=veh['route_id'])) > 0):
                 vdata['route'] = Route.objects.filter(rid=veh['route_id'])[0]
             else:
-                vdata['route'] = 'No Route Data'
+                vdata['route'] = None
             vdata['speed'] = veh['speed']
             vdata['updated'] = veh['last_updated_on']
             v = Vehicle(**vdata)
@@ -35,11 +35,11 @@ class Command(BaseCommand):
                 if(len(Stop.objects.filter(stop=ae['stop_id'])) > 0):
                     aeData['stop'] = Stop.objects.filter(stop=ae['stop_id'])[0]
                 else:
-                    aeData['stop'] = 'No Stop Data'
+                    aeData['stop'] = None
                 if(len(Route.objects.filter(rid=ae['route_id'])) > 0):
                     aeData['route'] = Route.objects.filter(rid=ae['route_id'])[0]
                 else:
-                    aeData['route'] = 'No Route Data'
+                    aeData['route'] = None
                 aeData['time'] = ae['arrival_at']
                 aeData['vehicle'] = v
                 newAE = Arrival_Estimate(**aeData)

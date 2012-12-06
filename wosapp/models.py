@@ -16,7 +16,7 @@ class Vehicle(models.Model):
 	location['lat'] = location_lat
 	location['lon'] = location_lon
 	#arrival estimates are in new table linked in via a vehicle instance foreign key
-	route = models.ForeignKey('Route')
+	route = models.ForeignKey('Route', null=True)
 	speed = models.FloatField()
 	updated = models.DateTimeField()
 	def __unicode__(self):
@@ -25,8 +25,8 @@ class Vehicle(models.Model):
 			
 
 class Arrival_Estimate(models.Model):
-	stop = models.ForeignKey('Stop')
-	route = models.ForeignKey('Route')
+	stop = models.ForeignKey('Stop', null=True)
+	route = models.ForeignKey('Route', null=True)
 	vehicle = models.ForeignKey('Vehicle')
 	time = models.DateTimeField()
 	def __unicode__(self):
