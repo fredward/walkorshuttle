@@ -147,7 +147,7 @@ def destination_selected(request):
 	if just_walking_time < path[2]:
 		print "It is faster to walk"
 	else:
-		print "walk to %s and take %s at %s to %s; total time: %s" % (ae.stop, ae.route, ae.time, arrival_ae.stop, path[2])
+		print "walk to %s and take %s at %s to %s; total time: %s" % (path[0].stop, path[0].route, path[0].time, path[1].stop, path[2])
 # 				if walk_time_to_stop < min_walk:
 # 					min_time = total_time.total_seconds()
 # 					path = []
