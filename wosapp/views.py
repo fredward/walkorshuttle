@@ -107,7 +107,7 @@ def destination_selected(request):
 		
 		#for each of these arrivals
 		for ae in useable_arrivals:
-			print str(ae.stop)
+			#print str(ae.stop)
 			
 			#get the next arrivals for that vehicle at your selected stop (see models.py)	
 			arrivals_after = ae.all_arrivals_after().filter(stop=selected_stop)
@@ -127,20 +127,27 @@ def destination_selected(request):
 					path = []
 					path.append(ae)
 					path.append(arrival_ae)
-					print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
+					path.append(total_time)
+					#print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
 				elif arrival_ae.time < min_ae.time:
 					min_ae = arrival_ae
 					path = []
 					path.append(ae)
 					path.append(arrival_ae)
-					print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
+					path.append(total_time)
+					#print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
 				elif arrival_ae == min_ae:
 					if walk_time_to_stop < min_walk:
 						min_walk = walk_time_to_stop
 						path = []
 						path.append(ae)
 						path.append(arrival_ae)
-						print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
+						path.append(total_time)
+						#print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
+	if just_walking_time < path[2]:
+		print "It is faster to walk"
+	else:
+		print "walk to %s and take %s at %s to %s; total time: %s" % (ae.stop, ae.route, ae.time, arrival_ae.stop, path[2])
 # 				if walk_time_to_stop < min_walk:
 # 					min_time = total_time.total_seconds()
 # 					path = []
