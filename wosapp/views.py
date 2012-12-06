@@ -164,9 +164,11 @@ def destination_selected(request):
 		arrival_time = arrival_time.replace(tzinfo=UTC)
 		
 		useable_arrivals = Arrival_Estimate.objects.filter(time__gte=arrival_time).filter(stop__stop=stop[0]).order_by('time')
-		if useable_arrivals:
-			print "Just walk to %s and get on the %s at %s" % (useable_arrivals[0].stop, useable_arrivals[0].route, useable_arrivals[0].time)
-			walk_path.append(useable_arrivals[0])
+		for ae in useable_arrivals:
+			arrivals_after = ae.all_arrivals_after().filter(stop=selected_stop).order_by('time')
+			if arrivals_after:
+				print "Just walk to %s and get on the %s at %s" % (rrivals_after[0].stop, arrivals_after[0].route, arrivals_after[0].time)
+				walk_path.append(arrivals_after[0])
 		i+=1
 			
 	return HttpResponse('')
