@@ -1,6 +1,7 @@
 # Create your views here.
 # Bing Maps Key: Am8_5ptSSXJmpyJ1b6hf_U5Uvc7rqMOsY2vkRuDdne5TG-R2VA3hCoNb7gI4RWU5
 from django.http import HttpResponse
+from operator import itemgetter
 from django.shortcuts import render
 from wosapp.packages.distance_time import haversine, calculate_min_until, calculate_time_between
 from wosapp.models import Vehicle, Route, Stop, Arrival_Estimate
@@ -146,6 +147,12 @@ def destination_selected(request):
 # 					path.append(ae)
 # 					path.append(arrival_ae)
 # 					print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
+
+	#now we find, for the user's convenience, the route with the LEAST walking time
+	#sort the walking times array by the walking time
+	print "type :" + str(type(request.session['walking_times']))
+	sorted_walking_times = sorted(request.session['walking_times'].iteritems(), key=itemgetter(1))
+	print "Sorted walking times: "+ str(sorted_walking_times)
 	
 			
 			
