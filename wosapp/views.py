@@ -169,9 +169,12 @@ def destination_selected(request):
 		
 		for ae in useable_arrivals:
 			arrivals_after = ae.all_arrivals_after().filter(stop=selected_stop).order_by('time')
+			# if there is an arrival downstream (arrivals_after isn't empty) of the one coming to the nearest stop, add it to the walk path and break.
 			if arrivals_after:
 				print "Just walk to %s and get on the %s at %s" % (ae.stop, ae.route, ae.time)
+				walk_path.append(ae)
 				walk_path.append(arrivals_after[0])
+				break
 		i+=1
 			
 	return HttpResponse('')
