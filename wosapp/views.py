@@ -23,7 +23,7 @@ def index(request):
 		for o in json.loads(r.order):
 			ordered_stops[r.longname].append(Stop.objects.get(stop=o).name)
 	c.update({'ordered_stops': ordered_stops})
-	print c
+	#print c
 	return render(request, 'wosapp/index.html', c)
 
 def process_location(request):
@@ -150,10 +150,9 @@ def destination_selected(request):
 
 	#now we find, for the user's convenience, the route with the LEAST walking time
 	#sort the walking times array by the walking time
-	print "type :" + str(type(request.session['walking_times']))
 	sorted_walking_times = sorted(request.session['walking_times'].iteritems(), key=itemgetter(1))
 	stop_num = len(sorted_walking_times)
-	print "Sorted walking times: "+ str(sorted_walking_times)
+	#print "Sorted walking times: "+ str(sorted_walking_times)
 	walk_path = []
 	i = 0
 	while not walk_path and i < stop_num:
@@ -188,7 +187,7 @@ def calculate_routes(request):
 	#http://dev.virtualearth.net/REST/v1/Routes/Walking?
 	#get walking distances to all stops
 	stop_walking_times = dict()
-	print "calculating walking times"
+	#print "calculating walking times"
 	for stop in Stop.objects.all():
 		params = urlencode({'wp.0': str(current_location['lat']) + ','+ str(current_location['lon']), 'wp.1': str(stop.location_lat) + "," + str(stop.location_lon), 'key' : 'Am8_5ptSSXJmpyJ1b6hf_U5Uvc7rqMOsY2vkRuDdne5TG-R2VA3hCoNb7gI4RWU5'}) 
 		#print 'http://dev.virtualearth.net/REST/v1/Routes/Walking?' + params
@@ -197,6 +196,6 @@ def calculate_routes(request):
 		route_data = json.load(data_return)
 		travel_duration = route_data['resourceSets'][0]['resources'][0]['travelDuration']
 		stop_walking_times[str(stop.stop)] = travel_duration
-	print stop_walking_times
+	#print stop_walking_times
 	request.session['walking_times'] = stop_walking_times
 	return HttpResponse('')		
