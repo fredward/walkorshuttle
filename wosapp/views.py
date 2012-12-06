@@ -152,11 +152,13 @@ def destination_selected(request):
 	#sort the walking times array by the walking time
 	print "type :" + str(type(request.session['walking_times']))
 	sorted_walking_times = sorted(request.session['walking_times'].iteritems(), key=itemgetter(1))
+	stop_num = len(sorted_walking_times)
 	print "Sorted walking times: "+ str(sorted_walking_times)
 	walk_path = []
 	i = 0
-	while not walk_path:
+	while not walk_path and i < stop_num:
 		stop = sorted_walking_times[i]
+		#stop_obj = Stop.objects.filter(stop=stop)
 		current_time = datetime.utcnow()
 		arrival_time = current_time + timedelta(seconds=stop[1])
 		
@@ -164,10 +166,11 @@ def destination_selected(request):
 		arrival_time = arrival_time.replace(tzinfo=UTC)
 		
 		useable_arrivals = Arrival_Estimate.objects.filter(time__gte=arrival_time).filter(stop__stop=stop[0]).order_by('time')
+		
 		for ae in useable_arrivals:
 			arrivals_after = ae.all_arrivals_after().filter(stop=selected_stop).order_by('time')
 			if arrivals_after:
-				print "Just walk to %s and get on the %s at %s" % (rrivals_after[0].stop, arrivals_after[0].route, arrivals_after[0].time)
+				print "Just walk to %s and get on the %s at %s" % (ae.stop, ae.route, ae.time)
 				walk_path.append(arrivals_after[0])
 		i+=1
 			
