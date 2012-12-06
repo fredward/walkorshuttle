@@ -153,8 +153,21 @@ def destination_selected(request):
 	print "type :" + str(type(request.session['walking_times']))
 	sorted_walking_times = sorted(request.session['walking_times'].iteritems(), key=itemgetter(1))
 	print "Sorted walking times: "+ str(sorted_walking_times)
-	
-			
+	walk_path = []
+	i = 0
+	while not walk_path:
+		stop = sorted_walking_times[i]
+		current_time = datetime.utcnow()
+		arrival_time = current_time + timedelta(seconds=stop[1])
+		
+		#figure out what time UTC you will arrive at the stop if you walked to it
+		arrival_time = arrival_time.replace(tzinfo=UTC)
+		
+		useable_arrivals = Arrival_Estimate.objects.filter(time__gte=arrival_time).filter(stop__stop=stop[0]).order_by('time')
+		if useable_arrivals:
+			print "Just walk to %s and get on the %s at %s" % (useable_arrivals[0].stop, useable_arrivals[0].route, useable_arrivals[0].time)
+			walk_path.append(useable_arrivals[0])
+		i+=1
 			
 	return HttpResponse('')
 
