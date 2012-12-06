@@ -6,10 +6,18 @@ $(document).ready(function() {
 	}).done(function(data) {
 		
 		//show the names of possible destinations
+		var i = 0;
 		$.each(data, function(){
 			if(this['name'] == 'Boylston Gate' || this['name'] == 'Quad' || this['name'] == 'Mather House' || this['name'] == 'Memorial Hall')
 			{
-				$('#popular-destinations').append($("<button/>", {text : this['name'], id : this['id'], class: "btn"}));
+				$('#popular-destinations').append($("<button/>", {text : this['name'], id : this['id'], class: "btn", style: "margin-bottom: 5px"}));
+				i++;
+				//break up our button group
+				if(i==2)
+				{
+					$('#popular-destinations').append($("<br/>"));
+				}
+					
 				
 			}
 			else{
