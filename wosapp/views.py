@@ -194,15 +194,16 @@ def calculate_routes(request):
 	#http://dev.virtualearth.net/REST/v1/Routes/Walking?
 	#get walking distances to all stops
 	stop_walking_times = dict()
-	#print "calculating walking times"
+	
 	for stop in Stop.objects.all():
+		#get the walking data from Bing maps
 		params = urlencode({'wp.0': str(current_location['lat']) + ','+ str(current_location['lon']), 'wp.1': str(stop.location_lat) + "," + str(stop.location_lon), 'key' : 'Am8_5ptSSXJmpyJ1b6hf_U5Uvc7rqMOsY2vkRuDdne5TG-R2VA3hCoNb7gI4RWU5'}) 
-		#print 'http://dev.virtualearth.net/REST/v1/Routes/Walking?' + params
+		
 		data_return = urlopen("http://dev.virtualearth.net/REST/v1/Routes/Walking?%s" % params)
-		#print data_return.read()
+	
 		route_data = json.load(data_return)
 		travel_duration = route_data['resourceSets'][0]['resources'][0]['travelDuration']
 		stop_walking_times[str(stop.stop)] = travel_duration
-	#print stop_walking_times
+	#store it into a session variable for later access
 	request.session['walking_times'] = stop_walking_times
 	return HttpResponse('')		
