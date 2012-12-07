@@ -144,7 +144,7 @@ def destination_selected(request):
 						path.append(arrival_ae)
 						path.append(total_time)
 						#print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
-	if just_walking_time < path[2]:
+	if not path or just_walking_time < path[2]:
 		print "It is faster to walk"
 	else:
 		print "walk to %s and take %s at %s to %s; total time: %s" % (path[0].stop, path[0].route, path[0].time, path[1].stop, path[2])
