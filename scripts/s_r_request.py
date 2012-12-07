@@ -1,6 +1,7 @@
 from subprocess import call
 import urllib, json, cPickle
 import os, pprint
+from datetime import datetime
 dir = os.path.dirname(__file__)
 manager_path = os.path.join(dir, '../manage.py')
 
@@ -16,4 +17,6 @@ dataDict['stops'] = json.load(f)
 f = urllib.urlopen("http://api.transloc.com/1.1/routes.json?%s" % params)
 
 dataDict['routes'] = json.load(f)
-call(['python',manager_path,'add_stops_routes',cPickle.dumps(dataDict)])
+call(['/usr/bin/python',manager_path,'add_stops_routes',cPickle.dumps(dataDict)])
+
+print "Stops and Routes Loaded at: %s" % (datetime.now())
