@@ -162,6 +162,7 @@ def destination_selected(request):
 				# for convenience get the path with the LEAST walking
 				if (walk_time_to_stop + walk_time_from_stop) < total_walk_min:
 					total_walk_min = walk_time_to_stop + walk_time_from_stop
+					walk_path =[]
 					walk_path.append(ae)
 					walk_path.append(arrival_ae)
 					walk_path.append(selected_stop)
@@ -201,9 +202,9 @@ def destination_selected(request):
 # 				walk_path.append(arrivals_after[0])
 # 				break
 # 		i+=1
-	fastest = {'on_stop' : path[0].stop.name, 'off_stop' : path[1].stop.name, 'end_stop' : path[2].name, 'total_time' : path[3]}
-	least_walking = {'on_stop' : walk_path[0].stop.name, 'off_stop' : walk_path[1].stop.name, 'end_stop' : walk_path[2].name, 'total_time' : walk_path[3]}
-	return HttpResponse(json.dumps({ 'just_walking_time' : walk_time_to_stop, 'fastest' : fastest,'least_walking' : least_walking} ))
+	fastest = {'on_stop' : path[0].stop.name,'route' : path[0].route.longname, 'off_stop' : path[1].stop.name, 'end_stop' : path[2].name, 'total_time' : path[3]}
+	least_walking = {'on_stop' : walk_path[0].stop.name, 'route' : walk_path[0].route.longname, 'off_stop' : walk_path[1].stop.name, 'end_stop' : walk_path[2].name, 'total_time' : walk_path[3]}
+	return HttpResponse(json.dumps({ 'just_walking_time' : just_walking_time, 'fastest' : fastest,'least_walking' : least_walking} ))
 
 
 # calculate the walking times from the users location to all shuttle stops

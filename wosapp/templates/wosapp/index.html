@@ -11,7 +11,6 @@
     <body style="margin-left: 15px">
         	{% csrf_token %}
         <div id="closeststop" style = "margin-bottom: 15px">
-            Running Shuttles
             <div>The closest shuttle stop to you is: <span id="closest"></span></div>
             <div>The next shuttles at that stop are: <span id="next_shuttles"></span></div>
             <!--{% for r, sl in ordered_stops.items %}
@@ -28,7 +27,13 @@
                 {% endfor %}-->
         </div>
         <div id = "route-display" style = "display: none">
-        	
+            <div id = "time-to-walk-display">
+        	</div>
+        	<div id = "fastest-route-display">
+        	</div>
+        	<div id = "least-walking-display">
+        	</div>
+
         </div>
         <div >
             Select your destination:

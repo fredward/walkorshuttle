@@ -67,7 +67,7 @@ $(document).ready(function () {
                 $.each(data['next_shuttles'], function () {
                     //display the next shuttles arriving at the user's closest stop -- the data on the vehicles is from the httpresponse
                     var next_shuttle_stops_div = $("<div/>", {
-                        html: ('<i class="icon-chevron-right"> </i>' + this[0] + ", " + this[1]),
+                        html: ('<i class=" icon-plus"> </i>' + this[0] + ", " + this[1]),
                         class: 'shuttle-info',
                         state: 'closed'
                     });
@@ -87,11 +87,11 @@ $(document).ready(function () {
                 //when users click on a vehicle listing, hide and show data on the next stops the vehicle will take
                 $('.shuttle-info').click(function () {
                     if ($(this).attr('state') == 'closed') {
-                        $(this).find('i').attr('class', 'icon-chevron-down');
+                        $(this).find('i').attr('class', 'icon-minus');
                         $(this).attr('state', 'open');
                         $(this).children('div').slideDown();
                     } else {
-                        $(this).find('i').attr('class', 'icon-chevron-right');
+                        $(this).find('i').attr('class', 'icon-plus');
                         $(this).attr('state', 'closed');
                         $(this).children('div').slideUp();
                     }

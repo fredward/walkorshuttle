@@ -59,7 +59,22 @@ $(document).ready(function() {
 });
 //show the returned data on optimal routing
 function display_route_data(data){
-	//$('#route-display').text(data['route_string']);
+	console.log(data);
+	// take the data returned and display our route optimization
+	//$("#route-display").text('');
+	$("#fastest-route-display").html("<strong>Fastest route with shuttles:</strong>"+
+									"</br>1. Walk to "+data['fastest']['on_stop'] +
+									"</br>2. Get on " + data['fastest']['route']+  
+									"</br>3. Ride to "+data['fastest']['off_stop']+
+									"</br>4. Walk to your destination." +
+									"</br>Total time: "+Math.round(data['fastest']['total_time']/60 *10)/10 + " min.");
+	$("#least-walking-display").html("<strong>Least walking:</strong>"+
+									"</br>1. Walk to "+data['least_walking']['on_stop'] +
+									"</br>2. Get on " + data['least_walking']['route']+  
+									"</br>3. Ride to "+data['least_walking']['off_stop']+
+									"</br>4. Walk to your destination." +
+									"</br>Total time: "+Math.round(data['least_walking']['total_time']/60 *10)/10 + " min.");
+	$("#time-to-walk-display").html("<strong>Walking</strong>: "+Math.round(data['just_walking_time']/60 *10)/10 + " min.");
 }
 
 function toggleLoading(state){
@@ -68,7 +83,7 @@ function toggleLoading(state){
 	{
 		$("#popular-destinations > .btn").attr("disabled", '');
 		$("#destination-select > select").attr("disabled",'');
-		$("#route-display").text("Loading....");
+		//$("#route-display").text("Loading....");
 		$("#route-display").show();
 	}
 	else if(state == 'off')
