@@ -80,11 +80,14 @@ function display_route_data(data){
 	{
 		$("#time-to-walk-display").html("<strong>Walking</strong>: "+Math.round(data['just_walking_time']/60 *10)/10 + " min.");
 		$("#fastest-route-display").html("<strong>Could not load arrival data for shuttles!</strong>");
+		$("#least-walking-display").html('');
 	}
 	else if(data['success'] == 'chose identity stop')
 	{
 		$("#time-to-walk-display").html("<strong>Walking</strong>: "+Math.round(data['just_walking_time']/60 *10)/10 + " min.");
 		$("#fastest-route-display").html("<strong>You chose your closest stop!</strong>");
+		$("#least-walking-display").html('');
+
 	}
 	toggleLoading('off');
 }
