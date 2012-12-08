@@ -108,7 +108,13 @@ def destination_selected(request):
 	path = []
 	walk_path = []
 	total_walk_min = 10000
+	#if we dont have any arrival_estimates, fail
+	if request.session['closest_stop'] == selected_stop.stop:
+		return HttpResponse(json.dumps({'success' : 'chose identity stop', 'just_walking_time': just_walking_time}))
+	if len(Arrival_Estimate.objects.all()) == 0:
+		return HttpResponse(json.dumps({'success' : 'failed to load arrivals', 'just_walking_time': just_walking_time}))
 	# for every stop at harvard
+
 	for stop in Stop.objects.all():
 		# get the walking time to it
 		walk_time_to_stop = request.session['walking_times'][str(stop.stop)]
@@ -120,8 +126,6 @@ def destination_selected(request):
 		
 		#get all vehicle arrivals at that stop after your arrival time
 		useable_arrivals = Arrival_Estimate.objects.filter(time__gte=arrival_time).filter(stop=stop)
-		if len(useable_arrivals) == 0:
-			return HttpResponse(json.dumps({'success' : 'failed to load arrivals', 'just_walking_time': just_walking_time}))
 		#for each of these arrivals
 		for ae in useable_arrivals:
 			#print str(ae.stop)

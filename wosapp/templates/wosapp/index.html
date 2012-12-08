@@ -3,7 +3,7 @@
     <head>
     		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
-				<link href="{{STATIC_URL}}bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+				<!link href="{{STATIC_URL}}bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
         <script src="{{STATIC_URL}}js/jquery-1.8.3.min.js"></script>
         <script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
         <script src="{{STATIC_URL}}js/index.js"></script>
@@ -45,14 +45,14 @@
 							<div class="btn-group" id="popular-destinations">	
 							</div>
 							<div id="destination-select">
-									<select>
+									<select class = "btn-danger">
 										<option id = "default">Select additional route</option> 
 									</select>
 							</div>
 					</div>
 					<span class = "text-info">
 							<small>Shuttle data only extends so far into the future. </br>
-							Results long in time or distance may be inaccurate.</small>
+							Distant or future results may be inaccurate.</small>
 					</span>
 				</div>
     </body>

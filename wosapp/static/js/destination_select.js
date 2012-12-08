@@ -11,7 +11,7 @@ $(document).ready(function() {
 			//add buttons and options to select
 			if(this['name'] == 'Boylston Gate' || this['name'] == 'Quad' || this['name'] == 'Mather House' || this['name'] == 'Memorial Hall')
 			{
-				$('#popular-destinations').append($("<button/>", {text : this['name'], id : this['id'], class: "btn", style: "margin-bottom: 5px"}));
+				$('#popular-destinations').append($("<button/>", {text : this['name'], id : this['id'], class: "btn btn-danger", style: "margin-bottom: 5px"}));
 				i++;
 				//break up our button group
 				if(i==2)
@@ -78,9 +78,13 @@ function display_route_data(data){
 	}
 	else if(data['success'] == 'failed to load arrivals')
 	{
-		console.log(data['just_walking_time']);
 		$("#time-to-walk-display").html("<strong>Walking</strong>: "+Math.round(data['just_walking_time']/60 *10)/10 + " min.");
 		$("#fastest-route-display").html("<strong>Could not load arrival data for shuttles!</strong>");
+	}
+	else if(data['success'] == 'chose identity stop')
+	{
+		$("#time-to-walk-display").html("<strong>Walking</strong>: "+Math.round(data['just_walking_time']/60 *10)/10 + " min.");
+		$("#fastest-route-display").html("<strong>You chose your closest stop!</strong>");
 	}
 	toggleLoading('off');
 }
