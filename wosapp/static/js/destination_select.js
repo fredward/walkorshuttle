@@ -41,8 +41,10 @@ $(document).ready(function() {
 					});
 					toggleLoading('on');
 				});
-		$('#destination-select').change(function(){
+		$('#destination-select select').change(function(){
 					//make the post call to python
+				if($('#destination-select :selected').attr('id') != "default")
+				{
 					$.ajax({
 						url : "destination_selected/",
 						type : "POST",
@@ -53,7 +55,7 @@ $(document).ready(function() {
 						display_route_data(data);
 					});
 					toggleLoading('on');
-
+				}
 			});
 	});
 });

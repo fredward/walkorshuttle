@@ -30,7 +30,7 @@ except:
 
 #It got good data from transloc then call it
 if 'data' in dataDict['routes']:
-	call(['/usr/bin/python',manager_path,'add_stops_routes',cPickle.dumps(dataDict)])
+	call(['python',manager_path,'add_stops_routes',cPickle.dumps(dataDict)])
 
 print "Stops and Routes Loaded at: %s" % (datetime.now())
 
