@@ -51,6 +51,9 @@ def process_location(request):
 			if(dist < min_dist):
 				min_dist = dist
 				min_stop = stop
+	else:
+		# we failed to load the stops
+		return HttpResponse(json.dumps({'success' : 'fail'}))
 	closest_stop =  min_stop
 	
 	#get data from db about closest stop
@@ -75,7 +78,7 @@ def process_location(request):
 		next_shuttles.append([ae.route.longname, calculate_min_until(ae.time), ae.id])
 	#store the closest stop id in the stop variable
 	request.session['closest_stop'] = closest_stop.stop  	
-	return HttpResponse(json.dumps({'closest' : closest_stop.name, "next_shuttles" : next_shuttles, 'next_shuttles_route' : next_shuttles_per_route}))
+	return HttpResponse(json.dumps({'closest' : closest_stop.name, "next_shuttles" : next_shuttles, 'next_shuttles_route' : next_shuttles_per_route, 'success' : 'success'}))
 
 #return possible destinations to show on the main page
 def get_destinations(request):
