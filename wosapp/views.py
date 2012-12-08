@@ -103,7 +103,8 @@ def destination_selected(request):
 	min_walk = 10000
 	min_ae = None
 	path = []
-	
+	walk_path = []
+	total_walk_min = 10000
 	# for every stop at harvard
 	for stop in Stop.objects.all():
 		# get the walking time to it
@@ -158,46 +159,51 @@ def destination_selected(request):
 						path.append(arrival_ae)
 						path.append(selected_stop)
 						path.append(total_time)
+				# for convenience get the path with the LEAST walking
+				if (walk_time_to_stop + walk_time_from_stop) < total_walk_min:
+					total_walk_min = walk_time_to_stop + walk_time_from_stop
+					walk_path.append(ae)
+					walk_path.append(arrival_ae)
+					walk_path.append(selected_stop)
+					walk_path.append(total_time)
+					print "MIN_WALK: %s: %s\tEnd: %s: %s \tdiff: %s \twalk1: %s walk2: %s\ttotal: %s" % (ae.stop,ae.time, arrival_ae.stop,arrival_ae.time, shuttle_time, walk_time_to_stop, walk_time_from_stop, total_time)
+						
 						#print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
 	if not path or just_walking_time < path[3]:
 		print "It is faster to walk"
 	else:
 		print "walk to %s and take %s at %s to %s; total time: %s" % (path[0].stop, path[0].route, path[0].time, path[1].stop, path[3])
-# 				if walk_time_to_stop < min_walk:
-# 					min_time = total_time.total_seconds()
-# 					path = []
-# 					path.append(ae)
-# 					path.append(arrival_ae)
-# 					print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
 
-	#now we find, for the user's convenience, the route with the LEAST walking time
-	#sort the walking times array by the walking time
-	sorted_walking_times = sorted(request.session['walking_times'].iteritems(), key=itemgetter(1))
-	stop_num = len(sorted_walking_times)
-	#print "Sorted walking times: "+ str(sorted_walking_times)
-	walk_path = []
-	i = 0
-	while not walk_path and i < stop_num:
-		stop = sorted_walking_times[i]
-		#stop_obj = Stop.objects.filter(stop=stop)
-		current_time = datetime.utcnow()
-		arrival_time = current_time + timedelta(seconds=stop[1])
-		
-		#figure out what time UTC you will arrive at the stop if you walked to it
-		arrival_time = arrival_time.replace(tzinfo=UTC)
-		
-		useable_arrivals = Arrival_Estimate.objects.filter(time__gte=arrival_time).filter(stop__stop=stop[0]).order_by('time')
-		
-		for ae in useable_arrivals:
-			arrivals_after = ae.all_arrivals_after().filter(stop=selected_stop).order_by('time')
-			# if there is an arrival downstream (arrivals_after isn't empty) of the one coming to the nearest stop, add it to the walk path and break.
-			if arrivals_after:
-				print "Just walk to %s and get on the %s at %s" % (ae.stop, ae.route, ae.time)
-				walk_path.append(ae)
-				walk_path.append(arrivals_after[0])
-				break
-		i+=1
-	return HttpResponse('')
+	# #now we find, for the user's convenience, the route with the LEAST walking time
+# 	#sort the walking times array by the walking time
+# 	sorted_walking_times = sorted(request.session['walking_times'].iteritems(), key=itemgetter(1))
+# 	stop_num = len(sorted_walking_times)
+# 	#print "Sorted walking times: "+ str(sorted_walking_times)
+# 	walk_path = []
+# 	i = 0
+# 	while not walk_path and i < stop_num:
+# 		stop = sorted_walking_times[i]
+# 		#stop_obj = Stop.objects.filter(stop=stop)
+# 		current_time = datetime.utcnow()
+# 		arrival_time = current_time + timedelta(seconds=stop[1])
+# 		
+# 		#figure out what time UTC you will arrive at the stop if you walked to it
+# 		arrival_time = arrival_time.replace(tzinfo=UTC)
+# 		
+# 		useable_arrivals = Arrival_Estimate.objects.filter(time__gte=arrival_time).filter(stop__stop=stop[0]).order_by('time')
+# 		
+# 		for ae in useable_arrivals:
+# 			arrivals_after = ae.all_arrivals_after().filter(stop=selected_stop).order_by('time')
+# 			# if there is an arrival downstream (arrivals_after isn't empty) of the one coming to the nearest stop, add it to the walk path and break.
+# 			if arrivals_after:
+# 				print "Just walk to %s and get on the %s at %s" % (ae.stop, ae.route, ae.time)
+# 				walk_path.append(ae)
+# 				walk_path.append(arrivals_after[0])
+# 				break
+# 		i+=1
+	fastest = {'on_stop' : path[0].stop.name, 'off_stop' : path[1].stop.name, 'end_stop' : path[2].name, 'total_time' : path[3]}
+	least_walking = {'on_stop' : walk_path[0].stop.name, 'off_stop' : walk_path[1].stop.name, 'end_stop' : walk_path[2].name, 'total_time' : walk_path[3]}
+	return HttpResponse(json.dumps({ 'just_walking_time' : walk_time_to_stop, 'fastest' : fastest,'least_walking' : least_walking} ))
 
 
 # calculate the walking times from the users location to all shuttle stops
