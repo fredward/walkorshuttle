@@ -1,0 +1,5 @@
+distribute==0.6.31
+dj-database-url==0.2.1
+psycopg2==2.4.5
+pytz==2012h
+wsgiref==0.1.2
