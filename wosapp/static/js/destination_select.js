@@ -8,6 +8,7 @@ $(document).ready(function() {
 		//show the names of possible destinations
 		var i = 0;
 		$.each(data, function(){
+			//add buttons and options to select
 			if(this['name'] == 'Boylston Gate' || this['name'] == 'Quad' || this['name'] == 'Mather House' || this['name'] == 'Memorial Hall')
 			{
 				$('#popular-destinations').append($("<button/>", {text : this['name'], id : this['id'], class: "btn", style: "margin-bottom: 5px"}));
@@ -62,7 +63,7 @@ function display_route_data(data){
 }
 
 function toggleLoading(state){
-	
+	//disable inputs and show some loading text
 	if(state == 'on')
 	{
 		$("#popular-destinations > .btn").attr("disabled", '');

@@ -18,6 +18,7 @@ def index(request):
 	#csrf token
 	c = {}
 	c.update(csrf(request))
+	# this makes our session data immediately available
 	request.session.save()
 #	some code to display the running routes and the stops in current order, this needs to be displayed in a better fashion
 	ordered_stops = dict()
@@ -87,7 +88,7 @@ def get_destinations(request):
 def destination_selected(request):
 	s = Session.objects.get(pk=request.session.session_key)
 	start = time.clock()
-	#new plan: disable destination buttons until route data loads!
+	#wait up to 15 seconds for walking data to come back from Bing maps
 	while 'walking_times' not in s.get_decoded():
 		s = Session.objects.get(pk=request.session.session_key)
 		if time.clock() - start >15:
@@ -212,8 +213,7 @@ def calculate_routes(request):
 		route_data = json.load(data_return)
 		travel_duration = route_data['resourceSets'][0]['resources'][0]['travelDuration']
 		stop_walking_times[str(stop.stop)] = travel_duration
-	#print stop_walking_times
+	#store the walking times for the user and save the session data
 	request.session['walking_times'] = stop_walking_times
 	request.session.save()
-	s = Session.objects.get(pk=request.session.session_key)
 	return HttpResponse('')		
