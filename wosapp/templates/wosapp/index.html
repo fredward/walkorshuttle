@@ -10,7 +10,7 @@
     </head>
     <body style="margin-left: 15px">
         	{% csrf_token %}
-        <div id="closeststop">
+        <div id="closeststop" style = "margin-bottom: 15px">
             Running Shuttles
             <div>The closest shuttle stop to you is: <span id="closest"></span></div>
             <div>The next shuttles at that stop are: <span id="next_shuttles"></span></div>
@@ -27,13 +27,16 @@
                 </div>
                 {% endfor %}-->
         </div>
-        <div style="margin-top : 15px">
+        <div id = "route-display" style = "display: none">
+        	
+        </div>
+        <div >
             Select your destination:
         </div>
-        <div id="destination-select">
+        <div >
             <div class="btn-group" id="popular-destinations">	
             </div>
-            <div>
+            <div id="destination-select">
                 <select>
                 </select>
             </div>

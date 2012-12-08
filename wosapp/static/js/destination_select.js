@@ -28,6 +28,7 @@ $(document).ready(function() {
 			
 		});
 		$('#popular-destinations > .btn').click(function(){
+					//make the post call to python
 					$.ajax({
 						url : "destination_selected/",
 						type : "POST",
@@ -35,11 +36,12 @@ $(document).ready(function() {
 						data : {destination_id : $(this).attr('id')},
 					
 					}).done(function(data) {
-					
+						display_route_data(data);
 					});
+					toggleLoading('on');
 				});
 		$('#destination-select').change(function(){
-					//make the correct post here
+					//make the post call to python
 					$.ajax({
 						url : "destination_selected/",
 						type : "POST",
@@ -47,8 +49,30 @@ $(document).ready(function() {
 						data : {destination_id : $('#destination-select :selected').attr('id')},
 					
 					}).done(function(data) {
-					
+						display_route_data(data);
 					});
+					toggleLoading('on');
+
 			});
 	});
 });
+//show the returned data on optimal routing
+function display_route_data(data){
+	//$('#route-display').text(data['route_string']);
+}
+
+function toggleLoading(state){
+	
+	if(state == 'on')
+	{
+		$("#popular-destinations > .btn").attr("disabled", '');
+		$("#destination-select > select").attr("disabled",'');
+		$("#route-display").text("Loading....");
+		$("#route-display").show();
+	}
+	else if(state == 'off')
+	{
+		$("#popular-destinations > .btn").removeAttr("disabled");
+		$("#destination-select > select").removeAttr("disabled");
+	}
+}

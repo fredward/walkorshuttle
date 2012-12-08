@@ -5,17 +5,20 @@ from operator import itemgetter
 from django.shortcuts import render
 from wosapp.packages.distance_time import haversine, calculate_min_until, calculate_time_between
 from wosapp.models import Vehicle, Route, Stop, Arrival_Estimate
+from django.contrib.sessions.models import Session
 from django.core import serializers
 from urllib import urlopen, urlencode
 from datetime import datetime, timedelta
 from django.core.context_processors import csrf
 from pytz import UTC
 import json
+import time
 
 def index(request):
 	#csrf token
 	c = {}
 	c.update(csrf(request))
+	request.session.save()
 #	some code to display the running routes and the stops in current order, this needs to be displayed in a better fashion
 	ordered_stops = dict()
 	for r in Route.objects.all():
@@ -82,9 +85,15 @@ def get_destinations(request):
 	return HttpResponse(json.dumps(destinations))
 	
 def destination_selected(request):
+	s = Session.objects.get(pk=request.session.session_key)
+	start = time.clock()
+	#new plan: disable destination buttons until route data loads!
+	while 'walking_times' not in s.get_decoded():
+		s = Session.objects.get(pk=request.session.session_key)
+		if time.clock() - start >15:
+			return HttpResponse(json.dumps({'route_string': "Could not load walking data!"}))
 	print "Selected stop: " + Stop.objects.get(stop=request.POST['destination_id']).name
 	selected_stop = Stop.objects.get(stop=request.POST['destination_id'])
-	print "Session: " + str(request.session['walking_times']['4109014'])
 	print "It will take " + str(request.session['walking_times'][request.POST['destination_id']]) + " sec to get to stop " + request.POST['destination_id']
 	just_walking_time = request.session['walking_times'][request.POST['destination_id']]
 	min_time = 10000
@@ -205,4 +214,6 @@ def calculate_routes(request):
 		stop_walking_times[str(stop.stop)] = travel_duration
 	#print stop_walking_times
 	request.session['walking_times'] = stop_walking_times
+	request.session.save()
+	s = Session.objects.get(pk=request.session.session_key)
 	return HttpResponse('')		
