@@ -5,7 +5,7 @@ from django.db import models
 #class Shuttle(models.Model):
 #
 class Vehicle(models.Model):
-	vid = models.IntegerField()
+	vid = models.IntegerField(primary_key=True)
 	STATUS_CHOICES = (('up','Tracking Up'),('down','Tracking Down'))
 	status = models.CharField(max_length=4, choices=STATUS_CHOICES)
 	heading = models.IntegerField()
@@ -50,7 +50,7 @@ class Arrival_Estimate(models.Model):
 		return vehicle_ae
 
 class Stop(models.Model):
-	stop = models.PositiveIntegerField()
+	stop = models.PositiveIntegerField(primary_key=True)
 	name = models.CharField(max_length = 75)
 	desc = models.CharField(max_length = 100)
 	code = models.CharField(max_length = 25)
@@ -64,7 +64,7 @@ class Stop(models.Model):
 
 
 class Route(models.Model):
-	rid = models.PositiveIntegerField()
+	rid = models.PositiveIntegerField(primary_key=True)
 	longname = models.CharField(max_length = 100)
 	shortname = models.CharField(max_length = 50)
 	type = models.CharField(max_length = 15)

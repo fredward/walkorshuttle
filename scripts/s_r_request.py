@@ -17,8 +17,20 @@ dataDict['stops'] = json.load(f)
 f = urllib.urlopen("http://api.transloc.com/1.1/routes.json?%s" % params)
 
 dataDict['routes'] = json.load(f)
+
+try:
+	params = urllib.urlencode({"agencies" : 52})
+	f = urllib.urlopen("http://api.transloc.com/1.1/vehicles.json?%s" % params)
+	#print json.load(f)['data'][params['agencies']]
+	dataDict['vehicles'] = json.load(f)
+	print("Success!")
+except:
+	print "vehicle failure"
+
+
 #It got good data from transloc then call it
 if 'data' in dataDict['routes']:
 	call(['/usr/bin/python',manager_path,'add_stops_routes',cPickle.dumps(dataDict)])
 
 print "Stops and Routes Loaded at: %s" % (datetime.now())
+

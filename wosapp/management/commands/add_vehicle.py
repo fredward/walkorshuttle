@@ -1,12 +1,14 @@
 # adds vehicles to the Vehicle model that come in a pickled python dict from the unpacked from the transLoc API
 
 from django.core.management.base import BaseCommand, CommandError
+from django.db import transaction
 from wosapp.models import Vehicle, Arrival_Estimate, Route, Stop
 from json import loads
 #import pprint
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        
+        transaction.enter_transaction_management(True)
+        transaction.managed(True)
         data = loads(args[0])
         Vehicle.objects.all().delete()
         
@@ -19,7 +21,7 @@ class Command(BaseCommand):
             vdata = dict()
             vdata['vid'] = veh['vehicle_id']
             vdata['status'] = veh['tracking_status']
-            if veh['heading']:
+            if veh['heading'] > -1:
               vdata['heading'] = veh['heading']
             vdata['location_lat'] = veh['location']['lat']
             vdata['location_lon'] = veh['location']['lng']
@@ -53,6 +55,9 @@ class Command(BaseCommand):
         Arrival_Estimate.objects.all().delete()
         for ae in aes:
         	ae.save()
+    	transaction.commit()        
+    	transaction.leave_transaction_management()
+
         
         	 
             
