@@ -41,7 +41,6 @@ def process_location(request):
     # get the closest shuttle stop
 	stops  = Stop.objects.all()
 	min_dist = 0.0
-	min_stop = 0;
 	print( str(lat) + ',' + str(lon))
 	if( len(stops) > 0 ):
 		min_dist = haversine(float(lat), float(lon), stops[0].location_lat, stops[0].location_lon)
@@ -51,6 +50,7 @@ def process_location(request):
 			if(dist < min_dist):
 				min_dist = dist
 				min_stop = stop
+	
 	closest_stop =  min_stop
 	
 	#get data from db about closest stop

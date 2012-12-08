@@ -8,7 +8,7 @@ class Vehicle(models.Model):
 	vid = models.IntegerField(primary_key=True)
 	STATUS_CHOICES = (('up','Tracking Up'),('down','Tracking Down'))
 	status = models.CharField(max_length=4, choices=STATUS_CHOICES)
-	heading = models.IntegerField()
+	heading = models.IntegerField(null=True)
 	#the lat lon of the vehical, stored as a dict of decimal fields
 	location = dict()
 	location_lat = models.DecimalField(db_column = 'lat',max_digits = 18, decimal_places = 15)
@@ -17,7 +17,7 @@ class Vehicle(models.Model):
 	location['lon'] = location_lon
 	#arrival estimates are in new table linked in via a vehicle instance foreign key
 	route = models.ForeignKey('Route', null=True)
-	speed = models.FloatField()
+	speed = models.FloatField(null=True)
 	updated = models.DateTimeField()
 	def __unicode__(self):
 		return ('%s' % (self.vid))
