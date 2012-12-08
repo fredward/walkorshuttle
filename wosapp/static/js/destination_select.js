@@ -11,7 +11,7 @@ $(document).ready(function() {
 			//add buttons and options to select
 			if(this['name'] == 'Boylston Gate' || this['name'] == 'Quad' || this['name'] == 'Mather House' || this['name'] == 'Memorial Hall')
 			{
-				$('#popular-destinations').append($("<button/>", {text : this['name'], id : this['id'], class: "btn btn-danger", style: "margin-bottom: 5px"}));
+				$('#popular-destinations').append($("<button/>", {text : this['name'], id : this['id'], class: "btn", style: "margin-bottom: 5px"}));
 				i++;
 				//break up our button group
 				if(i==2)
