@@ -1,6 +1,7 @@
 
 
 from django.core.management.base import BaseCommand, CommandError
+from django.db import transaction
 from wosapp.models import Stop, Route
 import json
 import pprint
@@ -9,6 +10,8 @@ from cPickle import loads
 class Command(BaseCommand):
     def handle(self, *args, **options):
         #clear the old stops out
+        transaction.enter_transaction_management()
+        transaction.managed(True)
         Stop.objects.all().delete()
         #unpickle the data and get the stops request
         raw_data = loads(args[0])
@@ -58,3 +61,7 @@ class Command(BaseCommand):
            
             r.order = json.dumps(order)
             r.save()
+        transaction.commit()
+        transaction.leave_transaction_management()
+
+

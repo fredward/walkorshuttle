@@ -46,7 +46,7 @@ class Arrival_Estimate(models.Model):
 		return ae_set
 	#QUERYSET of all arrivals after current for the vehicle 
 	def all_arrivals_after(self):
-		vehicle_ae = Arrival_Estimate.objects.filter(vehicle=self.vehicle).filter(time__gte=self.time)
+		vehicle_ae = Arrival_Estimate.objects.filter(vehicle=self.vehicle).filter(time__gt=self.time)
 		return vehicle_ae
 
 class Stop(models.Model):
@@ -78,3 +78,10 @@ class Route(models.Model):
 	order = models.CharField(max_length = 500)
 	def __unicode__(self):
 		return self.longname
+
+class Walking_Time(models.Model):
+	start_stop = models.PositiveIntegerField()
+	end_stop = models.PositiveIntegerField()
+	walking_time = models.PositiveIntegerField()
+	def __unicode__(self):
+		return Stop.objects.get(stop=self.start_stop).name + " to " + Stop.objects.get(stop=self.end_stop).name
