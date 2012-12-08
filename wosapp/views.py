@@ -120,7 +120,8 @@ def destination_selected(request):
 		
 		#get all vehicle arrivals at that stop after your arrival time
 		useable_arrivals = Arrival_Estimate.objects.filter(time__gte=arrival_time).filter(stop=stop)
-		
+		if len(useable_arrivals) == 0:
+			return HttpResponse(json.dumps({'success' : 'failed to load arrivals', 'just_walking_time': just_walking_time}))
 		#for each of these arrivals
 		for ae in useable_arrivals:
 			#print str(ae.stop)
@@ -207,7 +208,7 @@ def destination_selected(request):
 # 		i+=1
 	fastest = {'on_stop' : path[0].stop.name,'route' : path[0].route.longname, 'off_stop' : path[1].stop.name, 'end_stop' : path[2].name, 'total_time' : path[3]}
 	least_walking = {'on_stop' : walk_path[0].stop.name, 'route' : walk_path[0].route.longname, 'off_stop' : walk_path[1].stop.name, 'end_stop' : walk_path[2].name, 'total_time' : walk_path[3]}
-	return HttpResponse(json.dumps({ 'just_walking_time' : just_walking_time, 'fastest' : fastest,'least_walking' : least_walking} ))
+	return HttpResponse(json.dumps({ 'just_walking_time' : just_walking_time, 'fastest' : fastest,'least_walking' : least_walking, 'success':'success'} ))
 
 
 # calculate the walking times from the users location to all shuttle stops

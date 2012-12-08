@@ -54,7 +54,6 @@ $(document).ready(function () {
         navigator.geolocation.getCurrentPosition(
 
         function (position) {
-            console.log(position);
             //post to server and get started on calculating walking distances
             $.post("route/", position);
             

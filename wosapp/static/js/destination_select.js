@@ -18,8 +18,6 @@ $(document).ready(function() {
 				{
 					$('#popular-destinations').append($("<br/>"));
 				}
-					
-				
 			}
 			else{
 				$('#destination-select').find('select').append($("<option/>", {text : this['name'], id: this['id']}));
@@ -59,24 +57,32 @@ $(document).ready(function() {
 			});
 	});
 });
-//show the returned data on optimal routing
+//show the returned data on optimal routing -- and show error message if there is a failer
 function display_route_data(data){
-	console.log(data);
+	if(data['success'] == 'success'){
 	// take the data returned and display our route optimization
-	//$("#route-display").text('');
-	$("#fastest-route-display").html("<strong>Fastest route with shuttles:</strong>"+
-									"</br>1. Walk to "+data['fastest']['on_stop'] +
-									"</br>2. Get on " + data['fastest']['route']+  
-									"</br>3. Ride to "+data['fastest']['off_stop']+
-									"</br>4. Walk to " +data['fastest']['end_stop']+
-									"</br>Total time: "+Math.round(data['fastest']['total_time']/60 *10)/10 + " min.");
-	$("#least-walking-display").html("<strong>Least walking:</strong>"+
-									"</br>1. Walk to "+data['least_walking']['on_stop'] +
-									"</br>2. Get on " + data['least_walking']['route']+  
-									"</br>3. Ride to "+data['least_walking']['off_stop']+
-									"</br>4. Walk to " + data['least_walking']['end_stop']+
-									"</br>Total time: "+Math.round(data['least_walking']['total_time']/60 *10)/10 + " min.");
-	$("#time-to-walk-display").html("<strong>Walking</strong>: "+Math.round(data['just_walking_time']/60 *10)/10 + " min.");
+	// if we had a successful query
+		$("#fastest-route-display").html("<strong>Fastest route with shuttles:</strong>"+
+										"</br>1. Walk to "+data['fastest']['on_stop'] +
+										"</br>2. Get on " + data['fastest']['route']+  
+										"</br>3. Ride to "+data['fastest']['off_stop']+
+										"</br>4. Walk to " +data['fastest']['end_stop']+
+										"</br>Total time: "+Math.round(data['fastest']['total_time']/60 *10)/10 + " min.");
+		$("#least-walking-display").html("<strong>Least walking with shuttles:</strong>"+
+										"</br>1. Walk to "+data['least_walking']['on_stop'] +
+										"</br>2. Get on " + data['least_walking']['route']+  
+										"</br>3. Ride to "+data['least_walking']['off_stop']+
+										"</br>4. Walk to " + data['least_walking']['end_stop']+
+										"</br>Total time: "+Math.round(data['least_walking']['total_time']/60 *10)/10 + " min.");
+		$("#time-to-walk-display").html("<strong>Walking</strong>: "+Math.round(data['just_walking_time']/60 *10)/10 + " min.");
+	}
+	else if(data['success'] == 'failed to load arrivals')
+	{
+		console.log(data['just_walking_time']);
+		$("#time-to-walk-display").html("<strong>Walking</strong>: "+Math.round(data['just_walking_time']/60 *10)/10 + " min.");
+		$("#fastest-route-display").html("<strong>Could not load arrival data for shuttles!</strong>");
+	}
+	toggleLoading('off');
 }
 
 function toggleLoading(state){
