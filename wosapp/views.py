@@ -4,7 +4,6 @@ from django.http import HttpResponse
 from operator import itemgetter
 from django.shortcuts import render
 from wosapp.packages.distance_time import haversine, calculate_min_until, calculate_time_between
-
 from django.contrib.sessions.models import Session
 from wosapp.models import Vehicle, Route, Stop, Arrival_Estimate, Walking_Time
 from django.core import serializers
@@ -107,7 +106,6 @@ def destination_selected(request):
 	
 	# for every stop at harvard
 	for stop in Stop.objects.all():
-		time = clock()
 		# get the walking time to it
 		walk_time_to_stop = request.session['walking_times'][str(stop.stop)]
 		current_time = datetime.utcnow()
@@ -199,7 +197,6 @@ def destination_selected(request):
 				walk_path.append(arrivals_after[0])
 				break
 		i+=1
-	print "TOTAL TIME: " + str(clock()-time)		
 	return HttpResponse('')
 
 
