@@ -64,13 +64,13 @@ function display_route_data(data){
 	// if we had a successful query
 		$("#fastest-route-display").html("<strong>Fastest route with shuttles:</strong>"+
 										"</br>1. Walk to "+data['fastest']['on_stop'] +
-										"</br>2. Get on " + data['fastest']['route']+  
+										"</br>2. Get on " + data['fastest']['route']+" in " + Math.round(data['fastest']['board_time']/60 *10)/10 + " min." + 
 										"</br>3. Ride to "+data['fastest']['off_stop']+
 										"</br>4. Walk to " +data['fastest']['end_stop']+
 										"</br>Total time: "+Math.round(data['fastest']['total_time']/60 *10)/10 + " min.");
 		$("#least-walking-display").html("<strong>Least walking with shuttles:</strong>"+
 										"</br>1. Walk to "+data['least_walking']['on_stop'] +
-										"</br>2. Get on " + data['least_walking']['route']+  
+										"</br>2. Get on " + data['least_walking']['route']+" in " + Math.round(data['least_walking']['board_time']/60 *10)/10 + " min." +  
 										"</br>3. Ride to "+data['least_walking']['off_stop']+
 										"</br>4. Walk to " + data['least_walking']['end_stop']+
 										"</br>Total time: "+Math.round(data['least_walking']['total_time']/60 *10)/10 + " min.");

@@ -212,8 +212,8 @@ def destination_selected(request):
 # 				walk_path.append(arrivals_after[0])
 # 				break
 # 		i+=1
-	fastest = {'on_stop' : path[0].stop.name,'route' : path[0].route.longname, 'off_stop' : path[1].stop.name, 'end_stop' : path[2].name, 'total_time' : path[3]}
-	least_walking = {'on_stop' : walk_path[0].stop.name, 'route' : walk_path[0].route.longname, 'off_stop' : walk_path[1].stop.name, 'end_stop' : walk_path[2].name, 'total_time' : walk_path[3]}
+	fastest = {'on_stop' : path[0].stop.name,'board_time' : (path[0].time - current_time.replace(tzinfo=UTC)).total_seconds(),'route' : path[0].route.longname, 'off_stop' : path[1].stop.name, 'end_stop' : path[2].name, 'total_time' : path[3]}
+	least_walking = {'on_stop' : walk_path[0].stop.name,'board_time' : (walk_path[0].time - current_time.replace(tzinfo=UTC)).total_seconds(), 'route' : walk_path[0].route.longname, 'off_stop' : walk_path[1].stop.name, 'end_stop' : walk_path[2].name, 'total_time' : walk_path[3]}
 	return HttpResponse(json.dumps({ 'just_walking_time' : just_walking_time, 'fastest' : fastest,'least_walking' : least_walking, 'success':'success'} ))
 
 
