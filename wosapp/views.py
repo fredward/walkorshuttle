@@ -12,6 +12,7 @@ from datetime import datetime, timedelta
 from django.core.context_processors import csrf
 from pytz import UTC
 from time import clock
+from django.views.decorators.cache import never_cache
 import json
 import time
 
@@ -89,7 +90,8 @@ def get_destinations(request):
 		dest['id'] = s.stop
 		destinations.append(dest)
 	return HttpResponse(json.dumps(destinations))
-	
+
+@never_cache
 def destination_selected(request):
 	s = Session.objects.get(pk=request.session.session_key)
 	start = time.clock()
