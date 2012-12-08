@@ -10,6 +10,7 @@ from urllib import urlopen, urlencode
 from datetime import datetime, timedelta
 from django.core.context_processors import csrf
 from pytz import UTC
+from time import clock
 import json
 
 def index(request):
@@ -27,6 +28,7 @@ def index(request):
 	return render(request, 'wosapp/index.html', c)
 
 def process_location(request):
+	#if(Access.objects.get(id)
 	# request comes in as a query dict where lat has the key 'coords[latitiude] and lon 'coords[longitude]'
 	if( request.method == "POST" ):
 		lat = request.POST.get('coords[latitude]')
@@ -94,6 +96,7 @@ def destination_selected(request):
 	
 	# for every stop at harvard
 	for stop in Stop.objects.all():
+		time = clock()
 		# get the walking time to it
 		walk_time_to_stop = request.session['walking_times'][str(stop.stop)]
 		current_time = datetime.utcnow()
@@ -110,7 +113,7 @@ def destination_selected(request):
 			#print str(ae.stop)
 			
 			#get the next arrivals for that vehicle at your selected stop (see models.py)	
-			arrivals_after = ae.all_arrivals_after().filter(stop=selected_stop)
+			arrivals_after = ae.all_arrivals_after()#.filter(stop=selected_stop)
 			
 			#for each of these arrivals
 			for arrival_ae in arrivals_after:
@@ -118,36 +121,39 @@ def destination_selected(request):
 				#total_transit_time = shuttle_time + timedelta(seconds=walk_time_to_stop)
 				
 				#get the total time from now to when shuttle arrives
-				total_time = round(calculate_time_between(arrival_ae.time, current_time).total_seconds())
+				walk_time_from_stop = Walking_Time.objects.get(start_stop=arrival_ae.stop.stop, end_stop=selected_stop.stop).walking_time
+				total_time = round(calculate_time_between(arrival_ae.time, current_time).total_seconds()) + walk_time_from_stop
+				arrival_time = current_time + timedelta(seconds = total_time);
 				#total_time = shuttle_time #+ timedelta(seconds=walk_time_to_stop)
-				print "Start: %s\tEnd: %s \tdiff: %s \twalk: %s\ttotal: %s" % (ae.time, arrival_ae.time, shuttle_time, walk_time_to_stop, total_time)
-				#if its a new minimum stop it it into a path list
-				if min_ae == None:
-					min_ae = arrival_ae
+				#print "Start: %s: %s\tEnd: %s: %s \tdiff: %s \twalk1: %s walk2: %s\ttotal: %s" % (ae.stop,ae.time, arrival_ae.stop,arrival_ae.time, shuttle_time, walk_time_to_stop, walk_time_from_stop, total_time)
+				#if its a new fastest time add it
+				if total_time < min_time:
+					print "Start: %s: %s\tEnd: %s: %s \tdiff: %s \twalk1: %s walk2: %s\ttotal: %s" % (ae.stop,ae.time, arrival_ae.stop,arrival_ae.time, shuttle_time, walk_time_to_stop, walk_time_from_stop, total_time)
+					min_time = total_time
 					path = []
 					path.append(ae)
 					path.append(arrival_ae)
+					path.append(selected_stop)
 					path.append(total_time)
-					#print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
-				elif arrival_ae.time < min_ae.time:
-					min_ae = arrival_ae
-					path = []
-					path.append(ae)
-					path.append(arrival_ae)
-					path.append(total_time)
-					#print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
-				elif arrival_ae == min_ae:
 					if walk_time_to_stop < min_walk:
+						min_walk = walk_time_to_stop
+					#print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
+				#if they are EQUAL take the one with least walking to the first stop
+				elif total_time == min_time:
+					if walk_time_to_stop < min_walk:
+						print "Start: %s: %s\tEnd: %s: %s \tdiff: %s \twalk1: %s walk2: %s\ttotal: %s" % (ae.stop,ae.time, arrival_ae.stop,arrival_ae.time, shuttle_time, walk_time_to_stop, walk_time_from_stop, total_time)
+						min_time = total_time
 						min_walk = walk_time_to_stop
 						path = []
 						path.append(ae)
 						path.append(arrival_ae)
+						path.append(selected_stop)
 						path.append(total_time)
 						#print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
-	if not path or just_walking_time < path[2]:
+	if not path or just_walking_time < path[3]:
 		print "It is faster to walk"
 	else:
-		print "walk to %s and take %s at %s to %s; total time: %s" % (path[0].stop, path[0].route, path[0].time, path[1].stop, path[2])
+		print "walk to %s and take %s at %s to %s; total time: %s" % (path[0].stop, path[0].route, path[0].time, path[1].stop, path[3])
 # 				if walk_time_to_stop < min_walk:
 # 					min_time = total_time.total_seconds()
 # 					path = []
@@ -182,7 +188,7 @@ def destination_selected(request):
 				walk_path.append(arrivals_after[0])
 				break
 		i+=1
-			
+	print "TOTAL TIME: " + str(clock()-time)		
 	return HttpResponse('')
 
 
@@ -210,8 +216,9 @@ def calculate_routes(request):
 	
 # gets all walking times from stop to stop	
 def get_stop_walking_times(request):
+	Walking_Time.objects.all().delete()
 	for i in range(len(Stop.objects.all())):
-		for j in range(i,len(Stop.objects.all())):
+		for j in range(len(Stop.objects.all())):
 			start_stop = Stop.objects.all()[i]
 			end_stop = Stop.objects.all()[j]
 			params = urlencode({'wp.0': str(start_stop.location_lat) + ','+ str(start_stop.location_lon), 'wp.1': str(end_stop.location_lat) + "," + str(end_stop.location_lon), 'key' : 'Am8_5ptSSXJmpyJ1b6hf_U5Uvc7rqMOsY2vkRuDdne5TG-R2VA3hCoNb7gI4RWU5'}) 

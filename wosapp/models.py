@@ -46,7 +46,7 @@ class Arrival_Estimate(models.Model):
 		return ae_set
 	#QUERYSET of all arrivals after current for the vehicle 
 	def all_arrivals_after(self):
-		vehicle_ae = Arrival_Estimate.objects.filter(vehicle=self.vehicle).filter(time__gte=self.time)
+		vehicle_ae = Arrival_Estimate.objects.filter(vehicle=self.vehicle).filter(time__gt=self.time)
 		return vehicle_ae
 
 class Stop(models.Model):
