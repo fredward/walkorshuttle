@@ -6,6 +6,6 @@ urlpatterns = patterns('',
 	 url(r'^$', views.index, name='index'),
 	 url(r'^destinations/$', views.get_destinations),
 	 url(r'^route/$', views.calculate_routes),
-	 url(r'^destination_selected/$', views.destination_selected),
+	 url(r'^destination_selected', views.destination_selected),
 	 # url to run the method to get all walking times from stop to stop
 )

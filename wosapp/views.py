@@ -110,13 +110,15 @@ def destination_selected(request):
 	print "It will take " + str(request.session['walking_times'][request.POST['destination_id']]) + " sec to get to stop " + request.POST['destination_id']
 	just_walking_time = request.session['walking_times'][request.POST['destination_id']]
 	min_time = 10000
-	min_walk = 10000
+	min_time_walk = 10000
 	min_transit = 10000
-	min_ae = None
+	min_transit_total = 10000
+	min_walk = 10000
+	min_walk_total = 10000
 	path = []
 	walk_path = []
 	transit_path = []
-	total_walk_min = 10000
+	
 	#if we dont have any arrival_estimates, fail
 	if request.session['closest_stop'] == selected_stop.stop:
 		return HttpResponse(json.dumps({'success' : 'chose identity stop', 'just_walking_time': just_walking_time}))
@@ -166,15 +168,14 @@ def destination_selected(request):
 					path.append(selected_stop)
 					path.append(total_time)
 					path.append(transit_time)
-					if walk_time_to_stop < min_walk:
-						min_walk = walk_time_to_stop
+					min_time_walk = walk_time_to_stop
 					#print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
 				#if they are EQUAL take the one with least walking to the first stop
 				elif total_time == min_time:
-					if walk_time_to_stop < min_walk:
+					if walk_time_to_stop < min_time_walk:
 						print "Start: %s: %s\tEnd: %s: %s \tdiff: %s \twalk1: %s walk2: %s\ttotal: %s" % (ae.stop,ae.time, arrival_ae.stop,arrival_ae.time, shuttle_time, walk_time_to_stop, walk_time_from_stop, total_time)
 						min_time = total_time
-						min_walk = walk_time_to_stop
+						min_time_walk = walk_time_to_stop
 						path = []
 						path.append(ae)
 						path.append(arrival_ae)
@@ -182,23 +183,45 @@ def destination_selected(request):
 						path.append(total_time)
 						path.append(transit_time)
 				# for convenience get the path with the LEAST walking
-				if (walk_time_to_stop + walk_time_from_stop) < total_walk_min:
-					total_walk_min = walk_time_to_stop + walk_time_from_stop
+				if round((walk_time_to_stop + walk_time_from_stop)/60) < round(min_walk/60):
+					min_walk = walk_time_to_stop + walk_time_from_stop
 					walk_path =[]
 					walk_path.append(ae)
 					walk_path.append(arrival_ae)
 					walk_path.append(selected_stop)
 					walk_path.append(total_time)
 					walk_path.append(transit_time)
+					min_walk_total = total_time
 					print "MIN_WALK: %s: %s\tEnd: %s: %s \tdiff: %s \twalk1: %s walk2: %s\ttotal: %s" % (ae.stop,ae.time, arrival_ae.stop,arrival_ae.time, shuttle_time, walk_time_to_stop, walk_time_from_stop, total_time)
-				if (transit_time < min_transit):
+				elif round((walk_time_to_stop + walk_time_from_stop)/60) == round(min_walk/60):
+					if total_time < min_walk_total:
+						min_walk = walk_time_to_stop + walk_time_from_stop
+						min_walk_total = total_time
+						walk_path =[]
+						walk_path.append(ae)
+						walk_path.append(arrival_ae)
+						walk_path.append(selected_stop)
+						walk_path.append(total_time)
+						walk_path.append(transit_time)
+				if (round(transit_time/60) < round(min_transit/60)):
 					min_transit = transit_time
 					transit_path = []	
 					transit_path.append(ae)
 					transit_path.append(arrival_ae)
 					transit_path.append(selected_stop)
 					transit_path.append(total_time)
-					transit_path.append(transit_time)	
+					transit_path.append(transit_time)
+					min_transit_total = transit_time
+				elif (round(transit_time/60) == round(min_transit/60)):
+					if total_time < min_transit_total:
+						min_transit = transit_time
+						min_transit_total = total_time
+						transit_path = []	
+						transit_path.append(ae)
+						transit_path.append(arrival_ae)
+						transit_path.append(selected_stop)
+						transit_path.append(total_time)
+						transit_path.append(transit_time)	
 
 	if not path or just_walking_time < path[3]:
 		print "It is faster to walk"
