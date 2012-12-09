@@ -104,6 +104,11 @@ function display_route_data(data){
 		$("#least-transit-display").html('');
 
 	}
+	else if(data['success'] == 'no route data')
+	{
+			$("#time-to-walk-display").html("<strong>Walking</strong>: "+Math.round(data['just_walking_time']/60 *10)/10 + " min.");
+			$("#fastest-route-display").html("<strong>Unable to load routes!</strong>");
+	}
 	toggleLoading('off');
 }
 //toggle loading states

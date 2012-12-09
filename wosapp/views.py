@@ -224,7 +224,10 @@ def destination_selected(request):
 						transit_path.append(selected_stop)
 						transit_path.append(total_time)
 						transit_path.append(transit_time)	
-
+	#if we end up not getting data
+	if not path:
+		return HttpResponse(json.dumps({'success' : 'no route data', 'just_walking_time': just_walking_time}))
+		
 	# build our three context dictionaries for output to the file
 	fastest = {'on_stop' : path[0].stop.name,'board_time' : (path[0].time - current_time.replace(tzinfo=UTC)).total_seconds(),'route' : path[0].route.longname, 'off_stop' : path[1].stop.name, 'end_stop' : path[2].name, 'total_time' : path[3], 'transit_time' : path[4]}
 	least_walking = {'on_stop' : walk_path[0].stop.name,'board_time' : (walk_path[0].time - current_time.replace(tzinfo=UTC)).total_seconds(), 'route' : walk_path[0].route.longname, 'off_stop' : walk_path[1].stop.name, 'end_stop' : walk_path[2].name, 'total_time' : walk_path[3], 'transit_time' : walk_path[4]}
