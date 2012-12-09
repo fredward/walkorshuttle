@@ -67,7 +67,7 @@ $(document).ready(function () {
 					$.each(data['next_shuttles_route'], function () {
 						//display the next shuttles arriving at the user's closest stop -- the data on the vehicles is from the httpresponse
 						var next_shuttle_stops_div = $("<div/>", {
-							html: ('<i class=" icon-plus"> </i>' + this[0] + ", " + this[1] + ", "+ this[2]),
+							html: ('<i class=" icon-plus"> </i>' + this[0] + ", " + this[1] + ", "+ this[2] + " min."),
 							class: 'shuttle-info',
 							state: 'closed'
 						});
@@ -77,7 +77,7 @@ $(document).ready(function () {
 							$.each(this[3], function () {
 								//add info about the next stops that each displayed vehicle will take -- but its hidden for now
 								next_shuttle_stops_div.append($("<div/>", {
-									text: ("Next: " +this[1] + ", " + this[2]),
+									text: ("Next: " +this[1] + ", " + this[2] + " min."),
 									style: "display: none; padding-left: 15px"
 								}));
 							});
