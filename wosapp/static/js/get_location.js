@@ -83,6 +83,7 @@ $(document).ready(function () {
 							});
 						//}
 					});
+					$('#next_shuttles').text('');
 					//when users click on a vehicle listing, hide and show data on the next stops the vehicle will take
 					$('.shuttle-info').click(function () {
 						if ($(this).attr('state') == 'closed') {
