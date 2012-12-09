@@ -64,6 +64,7 @@ $(document).ready(function () {
             	if(data['success'] == 'success'){
                 //console.log(data['closest'])
 					$('#closest').text(data['closest']);
+					$('#next_shuttles').text('');
 					$.each(data['next_shuttles_route'], function () {
 						//display the next shuttles arriving at the user's closest stop -- the data on the vehicles is from the httpresponse
 						var next_shuttle_stops_div = $("<div/>", {
@@ -83,7 +84,6 @@ $(document).ready(function () {
 							});
 						//}
 					});
-					$('#next_shuttles').text('');
 					//when users click on a vehicle listing, hide and show data on the next stops the vehicle will take
 					$('.shuttle-info').click(function () {
 						if ($(this).attr('state') == 'closed') {
