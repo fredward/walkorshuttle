@@ -33,7 +33,7 @@ class Arrival_Estimate(models.Model):
 		return '%s, %s, %s, %s' % (self.vehicle.vid, self.route, self.stop, self.time)
 	#all the arrivals after the given one (for the vehicle)
 	def arrivals_after(self,num):
-		vehicle_ae = Arrival_Estimate.objects.filter(vehicle=self.vehicle)
+		vehicle_ae = Arrival_Estimate.objects.filter(vehicle=self.vehicle).order_by('time')
 		mark = False
 		ae_set = []
 		count = 0
