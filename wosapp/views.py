@@ -240,7 +240,8 @@ def destination_selected(request):
 # calculate the walking times from the users location to all shuttle stops
 def calculate_routes(request):
 	#data = request.POST
-	current_location = {'lat' : request.POST.get('coords[latitude]'), 'lon' : request.POST.get('coords[longitude]')}
+	#current_location = {'lat' : request.POST.get('coords[latitude]'), 'lon' : request.POST.get('coords[longitude]')}
+	current_location = {'lat' : 42.3817, 'lon' : -71.1257}
 	#get walking distances to all stops
 	stop_walking_times = dict()
 	
