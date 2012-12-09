@@ -32,7 +32,7 @@ $(document).ready(function() {
 		$('#popular-destinations > .btn').click(function(){
 					//make the post call to python
 					$.ajax({
-						url : "destination_selected/",
+						url : "destination_selected/"+Math.random()*Math.random(),
 						type : "POST",
 						dataType : "json",
 						data : {destination_id : $(this).attr('id')},
