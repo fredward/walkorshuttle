@@ -71,7 +71,7 @@ class Route(models.Model):
 	color = models.CharField(max_length = 6)
 	desc = models.CharField(max_length = 100)
 	# pickled array of segments
-	segments = models.CharField(max_length = 400)
+	segments = models.CharField(max_length = 800)
 	# ManyToMany means that you can 'add' multiple stops into the stops field
 	stops = models.ManyToManyField(Stop)
 	# order will be a json-ed array of the stopids in the correct order
