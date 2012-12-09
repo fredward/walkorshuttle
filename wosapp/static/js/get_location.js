@@ -64,25 +64,24 @@ $(document).ready(function () {
             	if(data['success'] == 'success'){
                 //console.log(data['closest'])
 					$('#closest').text(data['closest']);
-					$.each(data['next_shuttles'], function () {
+					$.each(data['next_shuttles_route'], function () {
 						//display the next shuttles arriving at the user's closest stop -- the data on the vehicles is from the httpresponse
 						var next_shuttle_stops_div = $("<div/>", {
-							html: ('<i class=" icon-plus"> </i>' + this[0] + ", " + this[1]),
+							html: ('<i class=" icon-plus"> </i>' + this[0] + ", " + this[1] + ", "+ this[2]),
 							class: 'shuttle-info',
 							state: 'closed'
 						});
 						$('#next_shuttles').append(next_shuttle_stops_div);
-						next_stops = data['next_shuttles_route'][this[2]];
-						console.log(next_stops)
-						if (next_stops !== undefined) {
-							$.each(next_stops, function () {
+						//next_stops = data['next_shuttles_route'][this;
+						//if (next_stops !== undefined) {
+							$.each(this[3], function () {
 								//add info about the next stops that each displayed vehicle will take -- but its hidden for now
 								next_shuttle_stops_div.append($("<div/>", {
 									text: ("Next: " +this[1] + ", " + this[2]),
 									style: "display: none; padding-left: 15px"
 								}));
 							});
-						}
+						//}
 					});
 					//when users click on a vehicle listing, hide and show data on the next stops the vehicle will take
 					$('.shuttle-info').click(function () {
