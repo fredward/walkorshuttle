@@ -30,9 +30,9 @@ $(document).ready(function() {
 			
 		});
 		$('#popular-destinations > .btn').click(function(){
-					//make the post call to python
+					//make the post call to python -- the random url prevents caching, mobile devices were being very stubborn
 					$.ajax({
-						url : "destination_selected/",
+						url : "destination_selected/"+Math.random()*Math.random(),
 						type : "POST",
 						dataType : "json",
 						data : {destination_id : $(this).attr('id')},
