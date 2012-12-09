@@ -1,3 +1,4 @@
+# request the vehicles from transloc and pass it off to a script for loading into the db
 from subprocess import call
 import urllib, json, cPickle
 import os

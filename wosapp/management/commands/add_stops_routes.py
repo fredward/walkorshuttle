@@ -1,5 +1,5 @@
 
-
+# add the stops and routes that we got from transloc to our database
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 from wosapp.models import Stop, Route, Vehicle, Arrival_Estimate
