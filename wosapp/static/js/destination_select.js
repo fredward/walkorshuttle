@@ -1,5 +1,8 @@
 //set up our thisination stop selection
 $(document).ready(function() {
+	//stop caching
+	$.ajaxSetup({ cache: false });
+	//get a list of all the stops
 	$.ajax({
 		url : "destinations/",
 		dataType : "json",
@@ -8,7 +11,7 @@ $(document).ready(function() {
 		//show the names of possible destinations
 		var i = 0;
 		$.each(data, function(){
-			//add buttons and options to select
+			//add buttons and options to select -- buttons are the most popular stops
 			if(this['name'] == 'Boylston Gate' || this['name'] == 'Quad' || this['name'] == 'Mather House' || this['name'] == 'Memorial Hall')
 			{
 				$('#popular-destinations').append($("<button/>", {text : this['name'], id : this['id'], class: "btn", style: "margin-bottom: 5px"}));
