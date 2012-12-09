@@ -158,8 +158,12 @@ def destination_selected(request):
 				#if its a new fastest time add it
 				transit_time = walk_time_to_stop + walk_time_from_stop + shuttle_time.total_seconds()
 
-					
-				if total_time < min_time:
+				# the next 3 selection structures build our 3 forms of optimization: total time, transit time, and walking time
+				# each method has a 'secondary' optimization if the times are equal or sufficiently equal
+				# the variables are somewhat standard. min_blank is the minimum time for that mode
+				# min_blank_blank is the secondary optimization minimum
+				# for instance min_walk is minimum walk time found and min_walk_total is the total time for that minimum walk 
+				if round(total_time/60) < round(min_time/60):
 					print "Start: %s: %s\tEnd: %s: %s \tdiff: %s \twalk1: %s walk2: %s\ttotal: %s" % (ae.stop,ae.time, arrival_ae.stop,arrival_ae.time, shuttle_time, walk_time_to_stop, walk_time_from_stop, total_time)
 					min_time = total_time
 					path = []
@@ -171,7 +175,7 @@ def destination_selected(request):
 					min_time_walk = walk_time_to_stop
 					#print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
 				#if they are EQUAL take the one with least walking to the first stop
-				elif total_time == min_time:
+				elif round(total_time/60) == round(min_time/60):
 					if walk_time_to_stop < min_time_walk:
 						print "Start: %s: %s\tEnd: %s: %s \tdiff: %s \twalk1: %s walk2: %s\ttotal: %s" % (ae.stop,ae.time, arrival_ae.stop,arrival_ae.time, shuttle_time, walk_time_to_stop, walk_time_from_stop, total_time)
 						min_time = total_time
@@ -223,15 +227,12 @@ def destination_selected(request):
 						transit_path.append(total_time)
 						transit_path.append(transit_time)	
 
-	if not path or just_walking_time < path[3]:
-		print "It is faster to walk"
-	else:
-		print "walk to %s and take %s at %s to %s; total time: %s" % (path[0].stop, path[0].route, path[0].time, path[1].stop, path[3])
-
+	# build our three context dictionaries for output to the file
 	fastest = {'on_stop' : path[0].stop.name,'board_time' : (path[0].time - current_time.replace(tzinfo=UTC)).total_seconds(),'route' : path[0].route.longname, 'off_stop' : path[1].stop.name, 'end_stop' : path[2].name, 'total_time' : path[3], 'transit_time' : path[4]}
 	least_walking = {'on_stop' : walk_path[0].stop.name,'board_time' : (walk_path[0].time - current_time.replace(tzinfo=UTC)).total_seconds(), 'route' : walk_path[0].route.longname, 'off_stop' : walk_path[1].stop.name, 'end_stop' : walk_path[2].name, 'total_time' : walk_path[3], 'transit_time' : walk_path[4]}
 	least_transit = {'on_stop' : transit_path[0].stop.name,'board_time' : (transit_path[0].time - current_time.replace(tzinfo=UTC)).total_seconds(), 'route' : walk_path[0].route.longname, 'off_stop' : transit_path[1].stop.name, 'end_stop' : transit_path[2].name, 'total_time' : transit_path[3], 'transit_time' : transit_path[4]}
 	
+	#return the json object
 	return HttpResponse(json.dumps({ 'just_walking_time' : just_walking_time, 'fastest' : fastest,'least_walking' : least_walking, 'least_transit' : least_transit, 'success':'success'} ))
 
 
