@@ -111,9 +111,11 @@ def destination_selected(request):
 	just_walking_time = request.session['walking_times'][request.POST['destination_id']]
 	min_time = 10000
 	min_walk = 10000
+	min_transit = 10000
 	min_ae = None
 	path = []
 	walk_path = []
+	transit_path = []
 	total_walk_min = 10000
 	#if we dont have any arrival_estimates, fail
 	if request.session['closest_stop'] == selected_stop.stop:
@@ -189,7 +191,14 @@ def destination_selected(request):
 					walk_path.append(total_time)
 					walk_path.append(transit_time)
 					print "MIN_WALK: %s: %s\tEnd: %s: %s \tdiff: %s \twalk1: %s walk2: %s\ttotal: %s" % (ae.stop,ae.time, arrival_ae.stop,arrival_ae.time, shuttle_time, walk_time_to_stop, walk_time_from_stop, total_time)
-						
+				if (transit_time < min_transit):
+					min_transit = transit_time
+					transit_path = []	
+					transit_path.append(ae)
+					transit_path.append(arrival_ae)
+					transit_path.append(selected_stop)
+					transit_path.append(total_time)
+					transit_path.append(transit_time)	
 
 	if not path or just_walking_time < path[3]:
 		print "It is faster to walk"
@@ -198,7 +207,9 @@ def destination_selected(request):
 
 	fastest = {'on_stop' : path[0].stop.name,'board_time' : (path[0].time - current_time.replace(tzinfo=UTC)).total_seconds(),'route' : path[0].route.longname, 'off_stop' : path[1].stop.name, 'end_stop' : path[2].name, 'total_time' : path[3], 'transit_time' : path[4]}
 	least_walking = {'on_stop' : walk_path[0].stop.name,'board_time' : (walk_path[0].time - current_time.replace(tzinfo=UTC)).total_seconds(), 'route' : walk_path[0].route.longname, 'off_stop' : walk_path[1].stop.name, 'end_stop' : walk_path[2].name, 'total_time' : walk_path[3], 'transit_time' : walk_path[4]}
-	return HttpResponse(json.dumps({ 'just_walking_time' : just_walking_time, 'fastest' : fastest,'least_walking' : least_walking, 'success':'success'} ))
+	least_transit = {'on_stop' : transit_path[0].stop.name,'board_time' : (transit_path[0].time - current_time.replace(tzinfo=UTC)).total_seconds(), 'route' : walk_path[0].route.longname, 'off_stop' : transit_path[1].stop.name, 'end_stop' : transit_path[2].name, 'total_time' : transit_path[3], 'transit_time' : transit_path[4]}
+	
+	return HttpResponse(json.dumps({ 'just_walking_time' : just_walking_time, 'fastest' : fastest,'least_walking' : least_walking, 'least_transit' : least_transit, 'success':'success'} ))
 
 
 # calculate the walking times from the users location to all shuttle stops

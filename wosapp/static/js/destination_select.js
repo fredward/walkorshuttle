@@ -79,6 +79,13 @@ function display_route_data(data){
 										"</br>4. Walk to " + data['least_walking']['end_stop']+
 										"</br>Total time: "+Math.round(data['least_walking']['total_time']/60 *10)/10 + " min." +
 										"</br>Transit time: "+Math.round(data['least_walking']['transit_time']/60 *10)/10 + " min.");
+		$("#least-transit-display").html("<strong>Least transit time:</strong>"+
+										"</br>1. Walk to "+data['least_transit']['on_stop'] +
+										"</br>2. Get on " + data['least_transit']['route']+" in " + Math.round(data['least_transit']['board_time']/60 *10)/10 + " min." +  
+										"</br>3. Ride to "+data['least_transit']['off_stop']+
+										"</br>4. Walk to " + data['least_transit']['end_stop']+
+										"</br>Total time: "+Math.round(data['least_transit']['total_time']/60 *10)/10 + " min." +
+										"</br>Transit time: "+Math.round(data['least_transit']['transit_time']/60 *10)/10 + " min.");
 		$("#time-to-walk-display").html("<strong>Walking</strong>: "+Math.round(data['just_walking_time']/60 *10)/10 + " min.");
 	}
 	else if(data['success'] == 'failed to load arrivals')
@@ -86,12 +93,14 @@ function display_route_data(data){
 		$("#time-to-walk-display").html("<strong>Walking</strong>: "+Math.round(data['just_walking_time']/60 *10)/10 + " min.");
 		$("#fastest-route-display").html("<strong>Could not load arrival data for shuttles!</strong>");
 		$("#least-walking-display").html('');
+		$("#least-transit-display").html('');
 	}
 	else if(data['success'] == 'chose identity stop')
 	{
 		$("#time-to-walk-display").html("<strong>Walking</strong>: "+Math.round(data['just_walking_time']/60 *10)/10 + " min.");
 		$("#fastest-route-display").html("<strong>You chose your closest stop!</strong>");
 		$("#least-walking-display").html('');
+		$("#least-transit-display").html('');
 
 	}
 	toggleLoading('off');
