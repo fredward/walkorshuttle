@@ -1,3 +1,5 @@
+#request the stops and routes from transloc, and pass the data to another script for loading into the db
+# we also request vehicles here, to prevent a race condition 
 from subprocess import call
 import urllib, json, cPickle
 import os, pprint

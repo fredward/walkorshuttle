@@ -22,7 +22,7 @@ def index(request):
 	c.update(csrf(request))
 	# this makes our session data immediately available
 	request.session.save()
-#	some code to display the running routes and the stops in current order, this needs to be displayed in a better fashion
+	#some code to display the running routes and the stops in current order, this needs to be displayed in a better fashion
 	ordered_stops = dict()
 	for r in Route.objects.all():
 		ordered_stops[r.longname] = list()
@@ -33,12 +33,10 @@ def index(request):
 	return render(request, 'wosapp/index.html', c)
 
 def process_location(request):
-	#if(Access.objects.get(id)
 	# request comes in as a query dict where lat has the key 'coords[latitiude] and lon 'coords[longitude]'
 	if( request.method == "POST" ):
 		lat = request.POST.get('coords[latitude]')
 		lon = request.POST.get('coords[longitude]')
-	#calculate_routes({'lat' : lat, 'lon' : lon}, request)
     # get the closest shuttle stop
 	stops  = Stop.objects.all()
 	min_dist = 0.0
@@ -72,7 +70,7 @@ def process_location(request):
 		ae_set = close_ae.arrivals_after(3)
 		next_shuttles_per_route.append([close_ae.route.longname, close_ae.stop.name, calculate_min_until(close_ae.time), []])
 		print next_shuttles_per_route
-		#store in dict
+		#store in list
 		for ae in ae_set:
 			next_shuttles_per_route[i][3].append([ae.route.longname, ae.stop.name, calculate_min_until(ae.time)])
 		i+= 1
@@ -96,6 +94,7 @@ def get_destinations(request):
 		destinations.append(dest)
 	return HttpResponse(json.dumps(destinations))
 
+#the user has picked a destination--process and return the routes
 @never_cache
 def destination_selected(request):
 	s = Session.objects.get(pk=request.session.session_key)
@@ -124,8 +123,8 @@ def destination_selected(request):
 		return HttpResponse(json.dumps({'success' : 'chose identity stop', 'just_walking_time': just_walking_time}))
 	if len(Arrival_Estimate.objects.all()) == 0:
 		return HttpResponse(json.dumps({'success' : 'failed to load arrivals', 'just_walking_time': just_walking_time}))
+	
 	# for every stop at harvard
-
 	for stop in Stop.objects.all():
 		# get the walking time to it
 		walk_time_to_stop = request.session['walking_times'][str(stop.stop)]
@@ -173,7 +172,6 @@ def destination_selected(request):
 					path.append(total_time)
 					path.append(transit_time)
 					min_time_walk = walk_time_to_stop
-					#print 'FASTER: ' + str(ae.stop.name) + " to " + str(arrival_ae.stop.name) + "\ttime:" + str(total_time)
 				#if they are EQUAL take the one with least walking to the first stop
 				elif round(total_time/60) == round(min_time/60):
 					if walk_time_to_stop < min_time_walk:
@@ -240,8 +238,6 @@ def destination_selected(request):
 def calculate_routes(request):
 	#data = request.POST
 	current_location = {'lat' : request.POST.get('coords[latitude]'), 'lon' : request.POST.get('coords[longitude]')}
-	#destination_stop = Stop.objects.filter(name='Quad')
-	#http://dev.virtualearth.net/REST/v1/Routes/Walking?
 	#get walking distances to all stops
 	stop_walking_times = dict()
 	

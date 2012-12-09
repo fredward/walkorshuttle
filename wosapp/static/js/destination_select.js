@@ -88,6 +88,7 @@ function display_route_data(data){
 										"</br>Transit time: "+Math.round(data['least_transit']['transit_time']/60 *10)/10 + " min.");
 		$("#time-to-walk-display").html("<strong>Walking</strong>: "+Math.round(data['just_walking_time']/60 *10)/10 + " min.");
 	}
+	//handle some errors..
 	else if(data['success'] == 'failed to load arrivals')
 	{
 		$("#time-to-walk-display").html("<strong>Walking</strong>: "+Math.round(data['just_walking_time']/60 *10)/10 + " min.");
@@ -105,7 +106,7 @@ function display_route_data(data){
 	}
 	toggleLoading('off');
 }
-
+//toggle loading states
 function toggleLoading(state){
 	//disable inputs and show some loading text
 	if(state == 'on')
