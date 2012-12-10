@@ -2,6 +2,11 @@
 $(document).ready(function() {
 	//stop caching
 	$.ajaxSetup({ cache: false });
+	
+	//set up the closest stop select div
+	$('#closest').click(function () {
+		$('#closest-stop-select').slideDown();
+	});
 	//get a list of all the stops
 	$.ajax({
 		url : "destinations/",
@@ -11,7 +16,7 @@ $(document).ready(function() {
 		//show the names of possible destinations
 		var i = 0;
 		$.each(data, function(){
-			//add buttons and options to select -- buttons are the most popular stops
+			//add buttons and options to two selects -- buttons are the most popular stops
 			if(this['name'] == 'Boylston Gate' || this['name'] == 'Quad' || this['name'] == 'Mather House' || this['name'] == 'Memorial Hall')
 			{
 				$('#popular-destinations').append($("<button/>", {text : this['name'], id : this['id'], class: "btn", style: "margin-bottom: 5px"}));
@@ -26,6 +31,8 @@ $(document).ready(function() {
 				$('#destination-select').find('select').append($("<option/>", {text : this['name'], id: this['id']}));
 				
 			}
+			$('#closest-stop-select').find('select').append($("<option/>", {text : this['name'], id: this['id']}));
+
 			
 			
 		});
@@ -58,6 +65,22 @@ $(document).ready(function() {
 					toggleLoading('on');
 				}
 			});
+		// allow the user to select their closest stop
+		$('#closest-stop-select select').change(function(){
+			//make the post call to python
+			if($('#closest-stop-select :selected').attr('id') != "default")
+			{
+				$.ajax({
+					url : "geolocate/",
+					type : "POST",
+					dataType : "json",
+					data : {closest_stop : $('#closest-stop-select :selected').attr('id')},
+				
+				}).done(function(data) {
+					update_route_list(data);
+				});
+			}
+		});
 	});
 });
 //show the returned data on optimal routing -- and show error message if there is a failer
@@ -126,4 +149,48 @@ function toggleLoading(state){
 		$("#popular-destinations > .btn").removeAttr("disabled");
 		$("#destination-select > select").removeAttr("disabled");
 	}
+}
+//update the route display when the user selects their location
+function update_route_list(data){
+	if(data['success'] == 'success'){
+                //console.log(data['closest'])
+					$('#closest').text(data['closest']);
+					$('#next_shuttles').text('');
+					$.each(data['next_shuttles_route'], function () {
+						//display the next shuttles arriving at the user's closest stop -- the data on the vehicles is from the httpresponse
+						var next_shuttle_stops_div = $("<div/>", {
+							html: ('<i class=" icon-plus"> </i>' + this[0] + ", " + this[1] + ", "+ this[2] + " min."),
+							class: 'shuttle-info',
+							state: 'closed'
+						});
+						$('#next_shuttles').append(next_shuttle_stops_div);
+						//next_stops = data['next_shuttles_route'][this;
+						//if (next_stops !== undefined) {
+							$.each(this[3], function () {
+								//add info about the next stops that each displayed vehicle will take -- but its hidden for now
+								next_shuttle_stops_div.append($("<div/>", {
+									text: ("Next: " +this[1] + ", " + this[2] + " min."),
+									style: "display: none; padding-left: 15px"
+								}));
+							});
+						//}
+					});
+					//when users click on a vehicle listing, hide and show data on the next stops the vehicle will take
+					$('.shuttle-info').click(function () {
+						if ($(this).attr('state') == 'closed') {
+							$(this).find('i').attr('class', 'icon-minus');
+							$(this).attr('state', 'open');
+							$(this).children('div').slideDown();
+						} else {
+							$(this).find('i').attr('class', 'icon-plus');
+							$(this).attr('state', 'closed');
+							$(this).children('div').slideUp();
+						}
+					});
+            	}
+	else
+	{
+		$('#next_shuttles').append("<div/>", {text : "Could not load stops and routes!"});
+	}
+                //$('#next_shuttles').html(shuttle_string);
 }
