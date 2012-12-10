@@ -68,6 +68,12 @@ $(document).ready(function() {
 		// allow the user to select their closest stop
 		$('#closest-stop-select select').change(function(){
 			//make the post call to python
+			//reset route data
+			$('#route-display').hide();
+			$("#time-to-walk-display").html('');
+			$("#fastest-route-display").html('');
+			$("#least-walking-display").html('');
+			$("#least-transit-display").html('');
 			if($('#closest-stop-select :selected').attr('id') != "default")
 			{	
 				$.post("route/", {closest_stop : $('#closest-stop-select :selected').attr('id')});
