@@ -33,10 +33,15 @@ def index(request):
 	return render(request, 'wosapp/index.html', c)
 
 def process_location(request):
+	request.session = {}
+	#request.session.save()
 	# request comes in as a query dict where lat has the key 'coords[latitiude] and lon 'coords[longitude]'
-	if( request.method == "POST" ):
+	if 'coords[latitude]' in request.POST:
 		lat = request.POST.get('coords[latitude]')
 		lon = request.POST.get('coords[longitude]')
+	elif 'closest_stop' in request.POST:
+		lat = stop.objects.get(stop=request.POST['closest_stop']).location_lat
+		lon = stop.objects.get(stop=request.POST['closest_stop']).location_lon
     # get the closest shuttle stop
 	stops  = Stop.objects.all()
 	min_dist = 0.0
@@ -106,6 +111,7 @@ def destination_selected(request):
 			return HttpResponse(json.dumps({'route_string': "Could not load walking data!"}))
 	print "Selected stop: " + Stop.objects.get(stop=request.POST['destination_id']).name
 	selected_stop = Stop.objects.get(stop=request.POST['destination_id'])
+	print request.session['walking_times']
 	print "It will take " + str(request.session['walking_times'][request.POST['destination_id']]) + " sec to get to stop " + request.POST['destination_id']
 	just_walking_time = request.session['walking_times'][request.POST['destination_id']]
 	min_time = 10000
