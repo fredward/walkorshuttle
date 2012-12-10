@@ -36,28 +36,31 @@ def process_location(request):
 	request.session = {}
 	#request.session.save()
 	# request comes in as a query dict where lat has the key 'coords[latitiude] and lon 'coords[longitude]'
+	stops  = Stop.objects.all()
+		# we failed to load the stops
+	if( len(stops) == 0 ):
+		return HttpResponse(json.dumps({'success' : 'fail'}))
 	if 'coords[latitude]' in request.POST:
 		lat = request.POST.get('coords[latitude]')
 		lon = request.POST.get('coords[longitude]')
 	elif 'closest_stop' in request.POST:
-		lat = stop.objects.get(stop=request.POST['closest_stop']).location_lat
-		lon = stop.objects.get(stop=request.POST['closest_stop']).location_lon
+		lat = Stop.objects.get(stop=request.POST['closest_stop']).location_lat
+		lon = Stop.objects.get(stop=request.POST['closest_stop']).location_lon
     # get the closest shuttle stop
-	stops  = Stop.objects.all()
+	
 	min_dist = 0.0
 	min_stop = 0
 	print( str(lat) + ',' + str(lon))
-	if( len(stops) > 0 ):
-		min_dist = haversine(float(lat), float(lon), stops[0].location_lat, stops[0].location_lon)
-		min_stop = stops[0]
-		for stop in stops:
-			dist = haversine(float(lat), float(lon), stop.location_lat, stop.location_lon)
-			if(dist < min_dist):
-				min_dist = dist
-				min_stop = stop
-	else:
-		# we failed to load the stops
-		return HttpResponse(json.dumps({'success' : 'fail'}))
+	min_dist = haversine(float(lat), float(lon), stops[0].location_lat, stops[0].location_lon)
+	min_stop = stops[0]
+	for stop in stops:
+		dist = haversine(float(lat), float(lon), stop.location_lat, stop.location_lon)
+		if(dist < min_dist):
+			min_dist = dist
+			min_stop = stop
+	
+	
+		
 	closest_stop =  min_stop
 	
 	#get data from db about closest stop
@@ -127,6 +130,7 @@ def destination_selected(request):
 	transit_path = []
 	
 	#if we dont have any arrival_estimates, fail
+	print('CLOSEEST' + str(request.session['closest_stop']))
 	if request.session['closest_stop'] == selected_stop.stop:
 		return HttpResponse(json.dumps({'success' : 'chose identity stop', 'just_walking_time': just_walking_time}))
 	if len(Arrival_Estimate.objects.all()) == 0:
@@ -248,8 +252,12 @@ def destination_selected(request):
 # calculate the walking times from the users location to all shuttle stops
 def calculate_routes(request):
 	#data = request.POST
-	#current_location = {'lat' : request.POST.get('coords[latitude]'), 'lon' : request.POST.get('coords[longitude]')}
-	current_location = {'lat' : 42.3817, 'lon' : -71.1257}
+	if 'coords[latitude]' in request.POST:
+		current_location = {'lat' : request.POST.get('coords[latitude]'), 'lon' : request.POST.get('coords[longitude]')}
+	elif 'closest_stop' in request.POST:
+		current_location = {'lat':Stop.objects.get(stop=request.POST['closest_stop']).location_lat, 'lon' : Stop.objects.get(stop=request.POST['closest_stop']).location_lon}
+	
+	#current_location = {'lat' : 42.3817, 'lon' : -71.1257}
 	#get walking distances to all stops
 	stop_walking_times = dict()
 	
