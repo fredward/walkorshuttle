@@ -33,7 +33,8 @@ def index(request):
 	return render(request, 'wosapp/index.html', c)
 
 def process_location(request):
-	request.session = {}
+	request.session.clear()
+	request.session.save()
 	#request.session.save()
 	# request comes in as a query dict where lat has the key 'coords[latitiude] and lon 'coords[longitude]'
 	stops  = Stop.objects.all()
@@ -62,7 +63,7 @@ def process_location(request):
 	
 		
 	closest_stop =  min_stop
-	
+	print "CLOSEST STOP:\t" + closest_stop.name
 	#get data from db about closest stop
 	possible_routes = Route.objects.filter(stops__name__contains=closest_stop.name) 
 	vehicles_running_to_stop = Vehicle.objects.filter(route__in=possible_routes)
@@ -130,7 +131,7 @@ def destination_selected(request):
 	transit_path = []
 	
 	#if we dont have any arrival_estimates, fail
-	print('CLOSEEST' + str(request.session['closest_stop']))
+	print('CLOSEEST' + str(request.session['closest_stop']) + "\t" + str(selected_stop.stop))
 	if request.session['closest_stop'] == selected_stop.stop:
 		return HttpResponse(json.dumps({'success' : 'chose identity stop', 'just_walking_time': just_walking_time}))
 	if len(Arrival_Estimate.objects.all()) == 0:
