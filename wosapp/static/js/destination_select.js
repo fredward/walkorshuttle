@@ -69,7 +69,8 @@ $(document).ready(function() {
 		$('#closest-stop-select select').change(function(){
 			//make the post call to python
 			if($('#closest-stop-select :selected').attr('id') != "default")
-			{
+			{	
+				$.post("route/", {closest_stop : $('#closest-stop-select :selected').attr('id'));
 				$.ajax({
 					url : "geolocate/",
 					type : "POST",
