@@ -69,11 +69,12 @@ def process_location(request):
 		#get the next 3 arrival estimates for the given ae
 		ae_set = close_ae.arrivals_after(3)
 		next_shuttles_per_route.append([close_ae.route.longname, close_ae.stop.name, calculate_min_until(close_ae.time), []])
-		print next_shuttles_per_route
 		#store in list
 		for ae in ae_set:
 			next_shuttles_per_route[i][3].append([ae.route.longname, ae.stop.name, calculate_min_until(ae.time)])
 		i+= 1
+		print next_shuttles_per_route
+
 
 			
 	
